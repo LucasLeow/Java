@@ -1,0 +1,105 @@
+== 2 types of Variables ==	
+	1) Primitive datatypes
+		- fundamental values
+			- int (32) | long (64) | short (16) | byte (8)
+			- boolean
+			- float
+			- double
+			- char
+			
+	2) Reference datatypes
+		- Java objects
+		- Its hard to say how much memory Reference datatypes uses
+		- All references for a given JVM will be allocated same memory
+		- Cannot perform arithmetic on reference variable
+		- if no values assigned, will take <null> value
+	
+	
+	* Java cares about type
+		- Don't allow placing Giraffe reference into Rabbit variable
+			eg:
+				Rabbit hopper = new Giraffe(); // will not compile!
+				
+		- Don't allow floating number into int variable
+		
+		unless explicit type cast (let compiler know you want it to happen)
+		
+		eg:
+			float myFloat = (int) 5.22; // becomes 5
+			
+			
+			
+== Primitive Types ==
+
+	byte : 8 bits : -128 to 127
+	short : 16 bits : -32768 to 32767
+	int : 32 bits : -2,147,483,648 to 2,147,483,647
+	long : 64 bits : -huge to huge
+	
+	float : 32 bits
+	double : 64 bits
+	
+	boolean isFun = true;
+	char c = 'f';
+	
+	* Compiler wont allow to assign larger dtype into smaller dtype
+		- eg: 
+		
+		int x = 24;
+		byte b = x; // not allowed, int 32 bits possible, byte only 8 bits
+		
+		
+		
+== Variables Naming Convention ==
+	- start with:
+		- letter
+		- underscore _
+		- dollarSign $
+		
+		* CANNOT start with number
+		* CANNOT be Java keywords
+			- see online for java keywords
+			
+== Reference Types ==
+
+	Dog d = new Dog();
+		- no such thing as object variable
+		- only have object reference variable
+		
+		- Object reference variable contains pointer, pointing to memory of object
+			- therefore, copying of object reference must becareful
+				cannot simply say obj2 = obj1 (pointing to same memory)
+				
+				
+	* Objects exist in garbage collection heap
+	* Object reference variables contains pointer to object memory
+	- Think of object reference variable like a remote control
+		- not directly manipulating the object
+		- but commanding the object to perform some action
+		
+		
+	== Primitive Variable ==
+	
+		int x = 7;
+			- The bits representing 7 goes into variable x
+			
+		Dog myDog = new Dog();
+			- The bits representing the memory address of Dog object stored in variable myDog
+			- Dog object does not get stored in the variable
+			
+			 
+			 
+== Arrays ==
+
+int[] nums = new int[7];
+Dog[] pets = new Dog[7];
+
+	- Arrays are always objects
+	- Java std lib has lots of data structures
+		- maps
+		- trees
+		- sets
+		
+	- Each element of an array could be either:
+		- primitive variable (if holding primitive type)
+		- reference variable (if holding reference type)
