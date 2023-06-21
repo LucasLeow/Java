@@ -45,6 +45,62 @@ For Main.java:
 
 
 == Data Types in Java ==
-	- int
-	- float
-	- double
+
+	1) Primitive
+		- int
+		- long
+		- short
+		- byte
+		
+		- float
+		- double
+		
+		- boolean
+		
+		- char
+		
+	2) Reference
+	
+		- Arrays
+		- String
+		- Objects
+	
+	
+	
+== Java Input ==
+	import java.util.Scanner;
+	
+	public class Main {
+		public static void main(String[] args) {
+			Scanner sc = new Scanner(System.in);
+			
+			boolean myBool = sc.nextBoolean();
+			byte myByte = sc.nextByte();
+			double myDouble = sc.nextDouble();
+			float myFloat =  sc.nextFloat();
+			int myInt = sc.nextInt();
+			String myString = sc.nextLine();
+			long myLong = sc.nextLong();
+			short myShort = sc.nextShort();
+		}
+	}
+	
+	** IMPORTANT
+	
+	- nextInt() or any of the next<type>() does not read in newline character
+		- newline character caused by user hitting "Enter" upon submission
+		- Scanner.nextLine() will read in newline character
+		- even next() will also cause this problem
+		- only nextLine() followed by a nextLine() will not cause this problem
+		
+	Solution:
+		- put a nextLine() call after each nextFoo to consume the newline char
+		
+		
+		
+== next() vs nextLine() ==
+	- next() : read input only until whitespace. Cannot read two words separated by whitespace
+		- also places cursor in same line after reading input
+		
+	- nextLine() reads input including whitespaces, until \n (newline detected)
+		- places cursor in next line

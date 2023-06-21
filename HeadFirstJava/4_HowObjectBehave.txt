@@ -1,0 +1,115 @@
+Instance variables : State
+Methods : Behaviour
+
+State affects Behaviour
+Behaviour affects State 
+	* Methods use instance variable values
+	
+	eg:
+	bark() {
+		if (this.weight < 14) {
+		 System.out.print("Yippy");
+		} else {
+		System.out.print("Loud Bark");
+		}
+	}
+	
+	
+- Different objects of the same class can behave differently
+	- based on the instance variable values
+	
+	eg:
+		play() method
+			- play song based on "title" attribute
+			- each object have different "title"
+			
+		public void play() {
+			soundPlayer.playSound(title);
+		}
+		
+		
+== Method Parameters ==
+
+	- A method uses parameters
+	- A caller passes arguments
+	
+	public void bark(int numBarks) {
+		for(int i = 0; i < numBarks; i++) {
+			System.out.println("Ruff Ruff!");
+		}
+	}
+	
+== Method return values ==
+	- method can return values
+	
+	
+	public int getNum()  {
+		return 43;
+	}
+	
+	* variable used to store return values must have matching types
+	
+	int myNum = obj.getNum();
+	
+	
+	* Methods can only return 1 value
+		- if want return multiple values
+		
+		if same type, can use array
+		
+		if different type, use ArrayList
+	
+	
+== Pass-by-value ==
+
+	- Java is pass-by-value (pass-by-copy)
+	- Whenever passing in arguments, a copy of the value is made locally in method
+	
+	* if passing objects (which are references), passing a copy of the "remote control"
+		into the method
+		
+
+
+== Encapsulation ==
+
+	- making instance variables private
+	- only modifiable using setter functions
+		- within setter, can set conditionals to test for out-of-bound values
+		- there may be setters without boundary checks, but can change mind later
+		
+	* Using access modifiers
+		- public
+		- private
+		
+		
+	* All instance variables should be private
+	* All Getters & Setters should be public
+	
+	
+
+== Instance variables default values ==
+
+	- if not given value & getter called,
+	
+	all number primitives = 0
+	char = 0
+	boolean = false
+	objects = null
+	
+	
+== Instance Variables vs Local variables ==
+
+	Instance variables:
+		- declared inside class, not inside methods
+		- has default values if unassigned
+		
+	Local variables:
+		- declared inside method
+		- must be initialized
+		
+== Comparing variables ==
+
+	- using the "==" operator
+	- "==" compares the bits within variables
+		- primitive: values
+		- reference: memory bit location
