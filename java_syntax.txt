@@ -1,0 +1,50 @@
+Java:
+	- class based
+	- object oriented programming (based on C & C++)
+	- console | GUI | web | mobile | game development | embedded systems
+		- televisions | washing machines | air-conditioners etc.
+		
+	- "Write-Once, Run Anywhere"
+	
+	- 3 Editions of Java (based on type of development)
+		- Java Standard Edition (Java SE) (contain core libraries)
+		- Java Enterprise Edition (APIs like JMS, EJB, JSP, Servlets etc.)
+		- Java Micro Edition (Cellphones | set-top boxes | handhelds etc.)
+		
+		
+	- Source Code (.java) -> Compiler -> bytecode (.class) -> Java Interpreter
+		- .class files typically saved in "bin" dir
+	
+	- Java code run on JVM (Java virtual machine)
+		- provides the runtime-environment
+		
+	
+== Java Setup ==
+	- Download the Java SDK 
+
+== Java Syntax ==
+
+* File name must be same as class name
+	- to allow JVM to know entrypoint for program
+	- if multiple classes within single source (.java) file,
+		- multiple .class files will still be created
+		- to distinguish entrypoint, JVM will look for name match
+
+
+For Main.java:
+
+	public class Main {
+
+		public static void main(String[] args) {
+			// TODO Auto-generated method stub
+			System.out.println("Hello World");
+		}
+
+	}
+		
+
+
+== Data Types in Java ==
+	- int
+	- float
+	- double

@@ -1,0 +1,68 @@
+== How Java Works ==
+
+	1) Source code written (.java)
+		- file name must correspond to class name
+		
+	2) Compile Source code (using javac compiler)
+		- checks for errors
+	
+	3) Java bytecode created (.class)
+		- any device with SDK installed can run
+		- platform independent
+		
+	4) Java Virtual Machine (JVM) will execute bytecode
+	
+
+== Code Structure in Java ==
+	- when JVM starts running, it looks for:
+	
+		public static void main(String[] args) {
+			...
+		}
+		
+	* Every APP should have at least 1 class & 1 main method
+		(not 1 main per class but 1 main per app)
+		
+	- every statement MUST end with ';'
+	
+	- everything goes / starts in class
+	
+	
+== Basics of running java file ==
+
+	1) Write & save java source file (.java)
+	2) Compile source file
+		- in terminal: "javac MyFirstApp.java"
+	3) Execute bytecode:
+		- in terminal: "java MyFirstApp"
+		
+		
+		
+== Additional Info about Java ==
+	- Almost everything in Java is an object
+	- Not all class require a main method
+		- However, main methods may be used to test classes
+	- Java only allow boolean test of boolean
+		- i.e while (int x = 1) {} is NOT ALLOWED!
+		
+
+== System.out.print vs System.out.println ==
+	- println : inserts new line
+	- print: prints on same line
+	
+	
+	
+== JVM vs Compiler ==
+
+	-- JVM --
+		- Runs Java bytecode file (.class) files
+		- throw ClassCast Exception
+		- checks for security
+	
+	-- Compiler --
+		- converts .java to .class file
+		- improve speed 
+		- check for type mismatch / syntax errors
+		- check for runtime errors 
+		- prevent access violations (invoke private methods etc.)
+		-
