@@ -1,0 +1,77 @@
+== Object oriented vs Procedural ==
+
+	OO:
+		- Don't have to touch code that already tested & delivered
+			- simply extend / create new class
+			- easily targettable & modifiable
+				- if Dog class need to change, just change Dog class logic
+		
+	Procedural:
+		- Have to include logic in code that was previously working
+		- may affect currently working logic & cause it to breakdown
+		- hard to target & isolate specific item
+			- because all items coded in sequential logic
+			- any changes may cause cascade = more changes
+			
+
+* Functions in classes are known as methods
+
+-- Override --
+	- Subclass redefines inherited method
+		- refinement (minor tweaks, still use super())
+		- replacement (entire method changes)
+		
+		
+		
+-- Classes --
+
+	- blueprint for making objects
+	
+		- Attributes (properties that the object has) 
+		- aka instance variables
+			- height
+			- weight
+			- color
+			- size
+			
+		- Methods (actions object can do)
+		- aka behaviours
+			- move()
+			- run()
+			- start()
+			- stop()
+			- dePress()
+	
+-- Objects --
+	- Made from classes
+	- Normally require 2 classes
+		1) Class to make object
+		2) Tester Class (main method)
+			- create & access objects
+	
+	
+== 2 uses of main(String[] args)
+	- test real classes
+	- launch / start Java app
+	
+	Real Java App:
+		- Objects talking to other objects to get things done
+		
+	
+
+== global variable concept ==
+	- using public static
+	
+	static: making variable become a class variable
+		- variable is accessible by any object of given class
+	
+	global constant:
+		- public static final
+		
+		
+		
+== Handling app with many classes ==
+	- if have hundreds / thousands of classes
+	- Compress all files into Java Archive (.jar) file
+		- within have txt file called, eg: manifest
+		- manifest defines which class holds the main() method
