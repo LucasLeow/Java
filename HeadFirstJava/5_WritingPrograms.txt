@@ -1,0 +1,104 @@
+== Program makeup ==
+	- Variables
+	- Classes & objects
+	- Operators
+	- Loops
+	
+eg: Writing Program for a game (Sink a Dot Com)	
+
+
+Step 1: High level design
+	- general flow of game
+	- rules of game
+	
+	1) User start game
+		1.1) game creates 3 Dot Coms
+		1.2) game places 3 Dot Coms on virtual grid
+		
+	2) Gameplay begins
+		2.1) repeat following actions until no Dot Com remains
+			- Prompt user for guess (A5, C0 etc.)
+			- check user guess against all Dot Com grids
+				- if hit, delete cell
+	
+	3) Game finish
+		- give user rating based on number of guesses
+		
+		
+* Think about the objects needed in game (OOP)
+
+	- Game Class
+	- DotCom Class
+	
+* Start simple
+	- single row instead of 2D grid
+	- 1 DotCom object instead of 3
+	
+	
+	
+	
+== Developing a Class Steps ==
+	- no fixed way to developing a class
+	- this serve as guideline
+	
+	1) Figure out what class is supposed to do
+	2) List instance variables & methods
+	3) Write prepcode for methods
+	4) Write testcode for methods
+	5) Implement class
+	6) Test methods
+	7) Debug & reimplement as required
+	
+	
+	prep code
+		- pseudocode (focus on logic)
+		
+	test code
+		- class / method that test the real code
+		
+	real code
+		- actual implementation of class
+		
+
+== Extreme Programming (XP) ==
+	- Writing test code before anything to test
+	
+	- make small but frequent releases
+	- develop in iteration cycles
+	- don't include anything not in spec (future proof etc.)
+	- write test code first
+	- no killer schedules, work regular hours
+	- refactor whenever notice opportunity
+	- don't release anything until passed all test
+	- set realistic schedules, based around small releases
+	- keep it simple
+	- program in pairs, move people around to get everyone involved
+	
+	
+== Benefits of Writing Test Code first ==
+	- Thinking through what might happen
+	- clarify thoughts about what method need to cover / do
+	- write test code then write implementation code needed to pass that test
+	- At each test iteration, run all previously-written tests
+		- ensure latest addition don't break previous-tested code
+		
+		
+== Enhanced For Loop ==
+	- to iterate through items in array
+	- ":" represents "in"
+	
+	int[] locations = [1,2,3]
+	for (int item:locations) {
+		System.out.println(item);
+	}
+	
+	
+* Cannot compare string and int
+	eg.
+		
+		String num = "2";
+		int x = 2;
+		
+		if (x == num) // Error thrown
+		
+		need to convert String to int or vice versa using parseInt etc.
