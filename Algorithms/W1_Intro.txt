@@ -1,0 +1,38 @@
+Algorithms
+	- Method for solving problem
+	- for intellectual stimulation
+	- to become proficient programmer
+		- Bad programmers worry about code
+		- Good programmers worry about data structures & their r/s
+		
+Data Structures
+	- Method to store information
+	
+	
+Programs = Data Structures + Algorithms
+
+
+
+
+== Packages ==
+	- essentially directories storing java files
+	
+	eg:
+		"tools" dir
+			- AdvCalc.java
+			- Calc.java
+		
+		- main.java
+		
+
+		* Inside main.java:
+			
+			import tools.Calc; // to use Calc object within main class
+			
+
+
+== .jar files ==
+
+	- Java Archive files
+	- Right click & unzip to desired project folder
+	- import according to package technique above

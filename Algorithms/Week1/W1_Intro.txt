@@ -1,0 +1,12 @@
+Algorithms
+	- Method for solving problem
+	- for intellectual stimulation
+	- to become proficient programmer
+		- Bad programmers worry about code
+		- Good programmers worry about data structures & their r/s
+		
+Data Structures
+	- Method to store information
+	
+	
+Programs = Data Structures + Algorithms
