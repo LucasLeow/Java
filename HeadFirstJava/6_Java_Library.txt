@@ -1,0 +1,131 @@
+== Prebuilt Classes ==
+	- Don't have to reinvent wheel
+	- Java library aka Java API
+	- used like building blocks
+	- just need to learn how to use it
+	
+	
+	
+== ArrayList ==
+	
+	import java.util.ArrayList;
+	
+	- Typically cannot use to store primitives
+		- faster to store using Array
+		
+	- A class in core Java API (library)
+		- add(obj)
+		- remove (idx)
+		- remove(obj)
+		- contains(obj)
+		- isEmpty()
+		- indexOf(obj)
+		- size()
+		- get(idx)
+		
+		
+		// <Egg> is the object stored inside the ArrayList
+		ArrayList<Egg> myList = new ArrayList<Egg>();
+		
+		Egg a = new Egg();
+		myList.add(a);
+		myList.size();
+		
+		boolean isIn = myList.contains(a);
+		int idx = myList.indexOf(a);
+		
+		boolean empty = myList.isEmpty();
+		myList.remove(a);
+		
+		
+
+== ArrayList vs Arrays ==
+	- Array does not have methods except .length()
+	
+	- Size must be declared for Array
+	- ArrayList is dynamic
+	
+	- Specific location must be provided for Array
+	
+	
+	
+	
+	
+	
+	
+Boolean Operators
+	AND : &&
+	OR : ||
+	NOT : !
+	NOT EQUALS : !=
+	
+	
+	
+
+== Using Java API (Library) ==
+	- classes grouped into packages (folders)
+	
+		- ArrayList in "util" package (folder)
+
+	1) Import statement
+		
+		import java.util.ArrayList;
+		
+		Then can just type ArrayList
+		
+		
+	2) Use full name everywhere
+		- includes package name & class name
+		
+			- package name: java.util
+			- class name: ArrayList
+	
+		java.util.ArrayList<Dog> myDogs = new java.util.ArrayList<Dog>;
+		
+		
+	
+	
+	* java.lang don't have to import
+		
+== Purpose of packages ==
+	- Organization (folders of related .java / .class codes)
+	- namespacing (differentiate classes with same names)
+	- security (restrict usage access to classes in same package)
+	
+	
+	
+== javax ==
+	- extensions not included in the standard library
+	
+		- Standard Extensions
+			- Sun considered official
+			- "javax" term used
+			- may eventually be upgraded to first-class (part of std lib)
+			- current javax libraries are old extensions that got promoted to Std lib.
+			
+		- NonStandard Extensions
+			- experimental / early access / beta
+	
+
+
+== Import statements ==
+	- not the same as "include" in C language.
+	- Does not make class memory size larger
+	- Does not compile the imported class / package
+	- Import is simply giving Java the full name of class
+	
+	
+== java.lang package ==
+	- The only std lib that don't have to import
+		- String | System etc.
+	- the very fundamentals
+	
+	
+
+== How to navigate the Java API (Library) ==
+	1) What classes are in the library?
+			- Browse Books (Java in a Nutshell)
+			
+	2) How to know what classes can do?
+		- Use HTML Java API docs (https://docs.oracle.com/javase/8/docs/api/)
+		- give details about class & its methods 
