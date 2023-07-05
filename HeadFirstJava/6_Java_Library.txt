@@ -5,7 +5,6 @@
 	- just need to learn how to use it
 	
 	
-	
 == ArrayList ==
 	
 	import java.util.ArrayList;
@@ -24,7 +23,7 @@
 		- get(idx)
 		
 		
-		// <Egg> is the object stored inside the ArrayList
+		// <Egg> is the object type stored inside the ArrayList
 		ArrayList<Egg> myList = new ArrayList<Egg>();
 		
 		Egg a = new Egg();
@@ -38,7 +37,6 @@
 		myList.remove(a);
 		
 		
-
 == ArrayList vs Arrays ==
 	- Array does not have methods except .length()
 	
@@ -46,11 +44,6 @@
 	- ArrayList is dynamic
 	
 	- Specific location must be provided for Array
-	
-	
-	
-	
-	
 	
 	
 Boolean Operators
@@ -61,38 +54,37 @@ Boolean Operators
 	
 	
 	
-
 == Using Java API (Library) ==
-	- classes grouped into packages (folders)
+	- Packages
+		- Collection of Classes
+		- Essentially, a directory containing Java Classes
 	
-		- ArrayList in "util" package (folder)
+		- ArrayList Class in "util" package (folder)
 
 	1) Import statement
-		
-		import java.util.ArrayList;
-		
-		Then can just type ArrayList
-		
+
+			eg:
+				import java.util.ArrayList;
+				ArrayList<String> names = new ArrayList<String>();
 		
 	2) Use full name everywhere
+
 		- includes package name & class name
-		
 			- package name: java.util
 			- class name: ArrayList
-	
-		java.util.ArrayList<Dog> myDogs = new java.util.ArrayList<Dog>;
+
+			eg:
+				java.util.ArrayList<Dog> myDogs = new java.util.ArrayList<Dog>;
 		
-		
-	
-	
+
 	* java.lang don't have to import
+		- most essential libraries
+		- Java implicitly imports by default
 		
-== Purpose of packages ==
+== Purpose of packages (directories) ==
 	- Organization (folders of related .java / .class codes)
 	- namespacing (differentiate classes with same names)
 	- security (restrict usage access to classes in same package)
-	
-	
 	
 == javax ==
 	- extensions not included in the standard library
@@ -103,21 +95,22 @@ Boolean Operators
 			- may eventually be upgraded to first-class (part of std lib)
 			- current javax libraries are old extensions that got promoted to Std lib.
 			
-		- NonStandard Extensions
+		- Non Standard Extensions
 			- experimental / early access / beta
 	
 
-
-== Import statements ==
+== Import statements in Java ==
 	- not the same as "include" in C language.
-	- Does not make class memory size larger
+	- Does not make Class file consume more memory
 	- Does not compile the imported class / package
-	- Import is simply giving Java the full name of class
+	- Importing is simply for ease of typing entire package name
+		- only need to specify Class name
 	
 	
 == java.lang package ==
 	- The only std lib that don't have to import
-		- String | System etc.
+	- contains all the most essential Classes
+		- String | System | Math | Number | Integer | Long | Thread etc.
 	- the very fundamentals
 	
 	

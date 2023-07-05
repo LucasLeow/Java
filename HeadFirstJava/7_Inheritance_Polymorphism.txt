@@ -1,0 +1,167 @@
+
+== General Advices ==========================================================================
+
+    - Plan programs with future in mind
+        - easily extensible
+        - flexible (spec change)
+
+    - To know if inheritance applied correctly, perform IS-A test
+        - X IS-A Y? If sounds wrong, inheritance applied wrongly
+            eg:
+                - Cat IS A Feline (good)
+                - Dog IS A Canine (good)
+                - Bathroom IS A Tub (Bad) (Sounds wrong) (Has-A r/s)
+                    - Bathroom HAS A Tub
+                    - Bathroom has reference to Tub, but does not extend Tub
+
+        - Any Subclass must pass the IS-A test for all its ancestors
+            eg: Class C IS-A both B & A (must pass)
+                Wolf IS-A Canine & Animal
+
+        * Superclass cannot use Subclass methods
+            - Superclass cannot possibly know what subclass it may have
+
+        - Possible to use superclass method + subclass implementation (refinement)
+
+        - Superclass can choose what to pass to its subclasses
+            - Using access modifiers (private | default | protected | public)
+            - public members are inherited, private members not inherited
+
+        - If no access to Source code, can extend a class and override function to desired code
+
+            public void roam() {
+                super.roam();
+                System.out.println("Subclass Implementation");
+            }
+        - Inheritance trees are typically shallow but wide
+            - i.e many children, but not ancestor relationships
+
+    - The reverse IS-A test is NOT VALID
+        - Triangle IS-A Shape (good)
+        - Shape IS-A Triangle (bad)
+    
+    - Not all classes can be extended
+        - class Person {} (non-public class, only same package can extend)
+        - public final class Person {}
+        - classes with private constructors
+
+        * To prevent people from changing
+            - JAVA API String class is final, not allowing people to change
+
+    - Overriding must have same return type & arguments
+        - else, known as overloading
+    - Overriding must have same accessibility
+        - if method public, overriden method must also be public
+
+=======================================================================================
+
+
+== Polymorphism Plan ==
+    - 5 steps to better class design -
+    - 3 tricks to polymorphism -
+    - 8 ways to make flexible code - 
+    - 4 tips for inheritance
+        1) Use inheritance when subclasses more specific type of superclass
+            - Willow IS-A type of Tree
+        2) Use inheritance when there exist shared behaviour among multiple Classes
+            - Square | Circle | Triangle has rotate()
+        3) Do Not use Inheritance for purpose of using a method
+            - Piano Class extends Alarm class just to use play() method
+        4) Do Not use Inheritance if IS-A test invalid
+    
+
+
+== Inheritance == (is-a r/s)
+    1) Consider what classes have in common
+    2) Come up with a superclass
+    3) Make all subclass inherit from superclass
+        - overridding possible for subclasses with unique features
+            - override: subclass redefine its inherited methods
+    4) If too many inherits from a superclass, see if subclasses can be grouped further
+        eg:
+            - Cat, Dog, Wolf, Tiger, Lion EXTENDS Animal
+                - Cat, Tiger, Lion : Feline
+                - Dog, Wolf : Canine
+            - Feline & Canine EXTENDS Animal
+
+            Feline roam()
+                - Cat | Tiger | Lion: makeNoise() & eat()
+            Canine roam()
+                - Dog | Wolf : makeNoise() & eat()
+
+== Benefits of Inheritance ==
+    - Avoid Duplicate Code
+    - Change easily implemented in SuperClass
+        - Don't have to modify each Subclass
+    - Defines Contract for Subtypes (SubClasses)
+        - Whatever defined in SuperClass, SubClass must do
+            eg:
+                - makeNoise()
+                - eat()
+                - sleep()
+                - move()
+
+                * All subclasses will be able to perform the above defined
+        - Polymorphism built upon Inheritance
+            - Refer subclass object using supertype reference
+            - Can simply use move() & will use the move() appropriate to the subclass
+            - helps with flexibility
+
+    Java terminology:
+        - subclass EXTENDS superclass
+        - subclass receives the following:
+            - instance variables (attributes)
+            - methods
+        - subclass can have its own instance variables & methods
+
+
+== Object Reference ==
+    - Most specific wins
+    - JVM starts looking in most specific class for method call
+    - moves up tree to parent / ancestors
+    - throws error if not found
+
+== Polymorphism ==
+    - Reference Type & Object Type concept
+        - Reference Type: LHS
+        - Object Type: RHS
+    
+    For polymorphism:
+        - Reference type will be superclass
+        - Object type will store the actual subclass
+
+        eg:
+
+        Animal[] animals = new Animal[2];
+
+        animals[0] = new Dog();
+        animals[1] = new Cat();
+
+        calling animal[0].eat() & animal[1].eat() yields different results
+
+    
+        * Possible to use Polymorphic arguments & return types\
+            - pass in any subclass when argument is super reference
+            - any new subclass will not affect function
+
+        eg:
+
+            public void giveShot(Animal a) {
+                a.makeNoise();
+            }
+
+            Cat c = new Cat();
+            Dog d = new Dog();
+
+            giveShot(c);
+            giveShot(d);
+
+
+        - Compiler looks at Reference type to decide if method can be called during compile time
+        - JVM looks at Object type during runtime to execute method
+
+    
+== Method Overloading ==
+    - Same Name
+    - Different parameters / return types
+    - No polymorphism involved
