@@ -1,0 +1,56 @@
+Interfaces
+    - 100% abstract classes
+
+Abstract classes
+    - Classes that cannot be instantiated
+    - compiler won't allow instantiating abstract classes
+    - Virtually no value unless extended
+        * Abstract classes can have static members (class attributes)
+    
+    * Some classes should not be instantiated
+        - Typically superclasses that are very general
+
+        eg:
+            - Animal class
+            - Shape class
+            
+            What does an Animal look like?
+            What does a shape look like?
+            - Its too ambiguous.
+
+        Solution:
+            - using "abstract" keyword
+        eg:
+            abstract public class Animal {} Also possible (sequence doesn't matter)
+            public abstract class Animal {
+                ...
+            }
+
+== Concrete Classes ==
+    - Classes that can be instantiated (Not abstract classes)
+
+    Abstract example: Animal
+    Concrete example: Dog | Cat | Hippo 
+
+
+== Abstract methods ==
+    - Abstract classes = must be extended
+    - Abstract methods = must be overriden
+        - typically for very generic methods that varies for each subclass
+    - to define a sort of "protocol" for subclass to adhere to
+    - Abstract methods have no body
+        - concrete class MUST implement abstract method body
+
+        eg:
+            move()
+            - different animal move() differently
+            makeNoise()
+            - different animal make different noises
+        
+    ** Cannot have abstract method in non-abstract Class
+        - Therefore, if have abstract method(s), class must be abstract
+        - Can have both abstract & non-abstract method in abstract Class
+
+        
+
+        
