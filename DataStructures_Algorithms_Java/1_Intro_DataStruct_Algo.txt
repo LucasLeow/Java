@@ -1,0 +1,11 @@
+== 1 Intro to Data Structures ==
+    - a way to organize data
+    - use data structures to organize huge data into memory
+        - easier to process
+        - efficiently access data
+    eg:
+        - messy library with books everywhere
+        - take a lot of time to find particular book
+        vs
+        - neatly arranged books by authors name
+        - faster to find books
