@@ -86,6 +86,11 @@
             - Gives rough idea of how algorithm will perform in different scenarios
 
         Asymptotic Notation
-            - Best case
-            - Average case
-            - Worst case
+            - Best case (Omega Notation) (least time, least memory) (lower bound)
+                - can take more than specified value, but nothing less
+
+            - Average case (Theta Notation) (avg time, avg memory)
+                - considers the average of the upper & lower bound
+
+            - Worst case (Big O Notation) (most time, most memory) (upper bound)
+                - can take less than specified value but nothing more
