@@ -25,3 +25,10 @@
                 - need more time to traverse
             - not easy to implement
             - Tree | Graph
+
+== 2 Intro to Algorithms ==
+    - Set of instructions to perform task / solve problem
+    - typically done with pseudo-coding then implemented with code 
+        - sequence of steps
+        - implement code
+        - test / troubleshoot
