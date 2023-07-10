@@ -32,3 +32,60 @@
         - sequence of steps
         - implement code
         - test / troubleshoot
+
+== 3 Algorithm Analysis Intro ==
+    - Several different algorithms possible to solve a given problem
+    - need to analyze which is the best to use
+        - Time Complexity
+        - Space Complexity (memory)
+
+        eg: Find sum of first n natural numbers
+
+            Mathematical approach: (O(1))
+                sum = n * (n + 1) / 2;
+
+            Programming approach: (O(n))
+                int sum = 0;
+                for (int i = 1; i <= n; i++) {
+                    sum+=i;
+                }
+
+                * Math approach is better in this scenario
+
+== 4 Time Complexity of Algorithms ==
+    - Amount of time taken by algorithm to run
+    - efficient algorithm = faster execution
+    - different mathematical tools exists to help evaluate time complexity
+    - if simply perform on local machine, its only based on the processing power of the local machine
+
+== 5 Space Complexity of Algorithms ==
+    - amount of memory taken by algorithm to run
+        - i.e memory taken by algorithm to solve problem
+    - Mathematical tools exist to help determine space & time complexity
+        - Known as asymptotic analysis of algorithm
+
+== 6 Asymptotic Analysis of Algorithm ==
+    - evalaute performance of algorithm in terms of input size & its increase
+        - if increase input size, how much more time / space does algorithm take
+    - does not measure actual time taken of algorithm
+        - dependent on machine
+    - how much more time / space taken when input size increase
+        - scales similarly in different devices
+    - if no input, then constant time
+
+== 7 Asymptotic Notations ==
+    - Mathematical expressions to describe running time of algorithm dependent on input size
+        eg:
+
+        Performance of car in 1L of petrol? (How much car travels)
+            - Highway: 25km / L
+            - City: 15km / L 
+            - City + Highway: 20km / L
+            due to varying traffic
+            - Never a fixed answer
+            - Gives rough idea of how algorithm will perform in different scenarios
+
+        Asymptotic Notation
+            - Best case
+            - Average case
+            - Worst case
