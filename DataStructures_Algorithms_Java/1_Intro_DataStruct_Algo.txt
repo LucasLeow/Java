@@ -9,3 +9,19 @@
         vs
         - neatly arranged books by authors name
         - faster to find books
+
+    -- types of data structures --
+        1) Linear
+            - data arranged sequentially
+            - each member connected to previous & next element
+            - easy to traverse (single level)
+            - easy to implement  (stored sequentially)
+            - Array | LinkedList | Stacks | Queues
+
+        2) Non-Linear
+            - data arranged not in sequence
+            - connected through different paths
+            - multiple levels (different ways to traverse)
+                - need more time to traverse
+            - not easy to implement
+            - Tree | Graph
