@@ -90,7 +90,7 @@
                 - can take more than specified value, but nothing less
 
             - Average case (Theta Notation) (avg time, avg memory)
-                - considers the average of the upper & lower bound
+                - considers the average for all runs
 
             - Worst case (Big O Notation) (most time, most memory) (upper bound)
                 - can take less than specified value but nothing more

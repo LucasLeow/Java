@@ -1,0 +1,25 @@
+Course Learnings:
+- Use Hibernate / JPA (Java Persistence API) for database access
+- REST API using Spring Boot
+- Spring MVC app
+- Springboot app to DB for CRUD
+- Spring Security to control app access
+- Use Java config (no XML) & Maven
+
+
+Latest version (2023)
+    - Spring Boot 3
+    - Spring 6
+    - IntelliJ
+
+
+JDK | JRE | JVM
+
+To compile Java code: Need Java Development Kit (JDK)
+    - .java -> .class
+    - when installing JDK, JRE & JVM installed together
+
+JVM: To run .class code
+
+JRE: contains all the Java API libraries
+    - JVM within JRE (JVM part of JRE, cannot have JVM without JRE)
