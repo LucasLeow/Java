@@ -88,3 +88,69 @@ JRE: contains all the Java API libraries
         
         2) Does Springboot run faster than Spring code?
             - No, Springboot wraps around Spring framework
+
+
+
+== What is Maven ==
+    - Dependency manager like npm (build-automation tool)
+    - When building java project, may require additional JAR files
+        - Spring | Hibernate | Commons logging | JSON etc.
+
+        Manual Solution:
+            - Go to each project website to download JAR files
+            - Manually add JAR files to build path
+
+        Maven Solution: (friendly helper / shopper)
+            - tell Maven dependencies
+            - Maven download JAR files & make avail during compile / run
+
+
+== Development Process ==
+
+    1) Configure project @ spring initializr website (quick way to get config setup)
+        - go to https://start.spring.io
+
+            Config:
+                - choose Maven
+                - Choose Java
+                - Choose latest version of Spring boot (avoid SNAPSHOT (beta))
+                - group: com.lucaslearning.springboot.demo
+                - Artifact | Name: mycoolapp
+                - Add Dependencies:
+                    - Spring Web (+ any others as required)
+                - Click generate
+
+    2) Download zip file
+    3) unzip file
+    4) import project into IDE 
+        - tomcat typically binded to port 8080
+        - src -> main -> java -> <group_name> -> <app_name>
+            - open app & run, go to localhost:8080. should see whitelabel error
+
+
+== Create REST Controller ==
+
+    1) Right click "com.lucaslearning.springboot.demo.mycoolapp"& create new package
+        - name it "com.lucaslearning.springboot.demo.mycoolapp.rest"
+                - new package essentially a new folder (named "rest")
+
+    2) Create new class called MyRestController within "rest" package
+
+
+        import org.springframework.web.bind.annotation.RestController;
+
+            @RestController
+            public class MyRestController {
+                // expose "/" to return "Hello World"
+
+                @GetMapping("/") // Handle HTTP GET requests for "/" path
+                public String sayHello() {
+                    return "Hello, World!";
+                }
+            }
+
+    3) Go to MycoolappApplication
+        - Run app
+        
+    4) Go to localhost:8080 
+        - should see Hello, World!
