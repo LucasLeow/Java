@@ -23,3 +23,68 @@ JVM: To run .class code
 
 JRE: contains all the Java API libraries
     - JVM within JRE (JVM part of JRE, cannot have JVM without JRE)
+
+
+
+
+== SpringBoot Overview ==
+    -  popular framework for Java app
+    - large number of helper classes & annotations
+
+    Problem: (when building Spring app)
+        1) Which JAR dependencies needed
+            - Java ARchive: many Java classes zipped together
+        2) How to set up config (XML or Java)
+        3) How to install server (Tomcat / JBoss etc.)  
+    
+    Solution (Springboot):
+        - minimize amount of manual config
+        - auto config based on prop-files & JAR classpath
+        - resolve dependency conflicts (Maven or Gradle) -> think of Maven / Gradle like npm / pip
+        - embedded HTTP server for quick start
+
+    -- Springboot vs Spring --
+        - Springboot wraps around Spring (makes it easier to use Spring)
+    
+
+    -- Spring Initializer --
+        - Quickstart Spring boot project
+            1) go to https://start.spring.io
+            2) Select dependencies
+            3) Creates Maven/Gradle project (downloadable)
+            4) Import project into IDE
+
+    
+    - Springboot provides embedded server
+        - inside mycoolapp.jar
+            - contains source code (.java files)
+            - Tomcat | Jetty | Undertow etc. server
+        - Self-contained unit, don't have to install anything else
+        - Can run Springboot app standalone (from IDE / cmdline)
+            java -jar mycoolapp.jar
+
+
+    - Deploying Springboot App -
+        - Can be deployed traditionally (WAR file) to external server (Tomcat | JBoss | Websphere etc.)
+            WAR: Web App Archive
+
+            eg:
+
+                Within Tomcat Server 1:
+
+                    1) mycoolapp.war
+                    2) travelapp.war
+                    3) shoppingapp.war
+
+                    3 apps deployed in Server 1
+
+
+
+    -- FAQs --
+        1) Does Springboot replace Spring MVC / Spring REST?
+            - No, Springboot wraps around those technologies
+                - Spring MVC | REST | Core | AOP etc.
+            - Springboot is just helping to get setup quickly with configuration
+        
+        2) Does Springboot run faster than Spring code?
+            - No, Springboot wraps around Spring framework
