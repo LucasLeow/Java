@@ -79,7 +79,6 @@ JRE: contains all the Java API libraries
                     3 apps deployed in Server 1
 
 
-
     -- FAQs --
         1) Does Springboot replace Spring MVC / Spring REST?
             - No, Springboot wraps around those technologies
@@ -121,8 +120,12 @@ JRE: contains all the Java API libraries
         - Maven also handles class / build paths
             - based on config file, Maven will add JAR files accordingly
 
-        
-    -- Maven Project Directory --
+
+
+    -- Maven Project Directory / Spring Boot Project Structure --
+
+        1) Spring Initializr helps create Maven project (zip file -> unzip & open with IDE)
+
         - have standard directory structure
         - to standardize project directory structure amongst all dev teams
 
@@ -132,13 +135,58 @@ JRE: contains all the Java API libraries
                 - <package_structure>/*.java src codes
 
             - "/src/main/resources" : store properties / config files for app
+                - application.properties: Springboot load properties from this file
+                    - created by Spring initializr (empty file by default)
+
+                    server.port=8585 (default is 8080)
+                    coach.name=Mickey Mouse (own custom property)
+                    team.name=The Mouse Crew
+
+                    - Using custom properties -
+
+                        @RestController
+                        public class MyRestController {
+                            @Value("${coach.name}")
+                            private String coachName;
+
+                            @Value("${team.name}")
+                            private String teamName;
+                        }
+                
+                - ./resources/static : stores static content for app
+                    - HTML | CSS | JS | images etc.
+
+                - ./resources/templates : Springboot load templates from /templates dir
+                    - Springboot includes auto config for the following template engines:
+                        - FreeMarker
+                        - Thymeleaf (popular engine, used in this course)
+                        - Mustache
+
 
             - "/src/main/webapp : JSP | web config files + other assets (images / css / js etc)
                 -JSP (Java Server Pages): Webpages that support dynamic content (JSP tags for content <% %>)
 
+                * Do not use this dir if app is packaged as JAR
+                * Only works with WAR packaging if want to use this dir
+
             - /src/test: Unit testing src codes + properties / config files used by unit testing
 
             - /target: destination directory for compiled code, auto created by Maven
+
+
+        - Maven Wrapper files -
+                mvnw & mvnw.cmd
+            - allow system to run Maven project without having Maven installed 
+            - if correct version of Maven not found locally, will auto download correct version
+            - 2 files provided:
+                1) mvnw.cmd : for windows -> runs "mvnw clean compile test"
+                1) mvnw.sh for linux / mac -> runs "./mvnw clean compile test"
+
+            - if have Maven installed, can ignore / delete mvnw wrapper files
+                - just use Maven in cmd : "mvn clean compile test" (no need mvnw)
+            
+
+
 
     Benefits of Maven standard file structure:
         1) Dev can find files easily
@@ -170,12 +218,23 @@ JRE: contains all the Java API libraries
                 - dependencies
                     -  list of projects (modules) app is dependent on
                         - Spring, Hibernate, JSON etc.
+
+                    - <artifactId> spring-boot-starter-web </artifactId>
+                        - Spring boot starters : collection of Maven dependencies
+                            -  spring-web | spring-webmvc | hibernate-validator | tomcat etc.
+                        - Developers dont have to specify all individual dependencies, just user starter
+                
                 - plug-ins
                     - custom tasks to run
                         - generate JUnit test report etc.
-                
 
+                    - <artifactId>spring-boot-maven-plugin</artifactId>
+                        - to package executable jar | war ("./mvnw package" in linux)
+                        - also to easily run the app ("./mvnw spring-boot:run" in linux)
+                            * if have maven installed, just use mvn, dont need add w
 
+                        
+        
             - Project Coordinates - (GAV) Group, Artifact, Version (Lingo)
 
                 - uniquely identify a project
@@ -219,8 +278,7 @@ JRE: contains all the Java API libraries
 
 
 
-
-== Development Process ==
+== Starting Development Process ==
 
     1) Configure project @ spring initializr website (quick way to get config setup)
         - go to https://start.spring.io
@@ -243,7 +301,7 @@ JRE: contains all the Java API libraries
             - open app & run, go to localhost:8080. should see whitelabel error
 
 
-== Create REST Controller ==
+== Creating simple REST Controller ==
 
     1) Right click "com.lucaslearning.springboot.demo.mycoolapp"& create new package
         - name it "com.lucaslearning.springboot.demo.mycoolapp.rest"
@@ -272,8 +330,8 @@ JRE: contains all the Java API libraries
 
 
 
-== Spring Projects (Modules) ==
-
+== Spring Projects ==
+    * Java typically call these libraries as projects (in JS, its like Express.js | mongoose | nodemon etc.)
     - Additional Spring modules built on top of Spring framework (add-ons)
     - Only use what is needed
         - Spring Cloud | Spring Data
@@ -283,3 +341,9 @@ JRE: contains all the Java API libraries
     
     www.spring.io (To get more info on Spring)
         - Projects -> Overview
+
+
+
+
+
+
