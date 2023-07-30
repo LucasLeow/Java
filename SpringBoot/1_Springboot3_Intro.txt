@@ -488,7 +488,7 @@ JRE: contains all the Java API libraries
 
 
 
-== Running Springboot from cmd line ==
+== Running Springboot app from cmd line ==
     - want to run springboot app outside of IDE
     - don't need to have IDE opened
     - server embedded in JAR file, no need to have separate server installed / running
@@ -520,3 +520,31 @@ JRE: contains all the Java API libraries
         2) open terminal -> "mvnw package"
         3) mvnw spring-boot:run (auto look in target dir to run .jar file)
             - dont need to cd into target dir 
+
+
+
+== Springboot custom app properties ==
+    - to have dynamic values (not hardcoding)
+    - to read app config from properties file instead of hardcoding
+
+    Soln:
+        - using app properties file
+        - By default, SpringBoot reads info from standard properties file
+            - src/main/resources/application.properties
+            - can define any custom properties in this file
+            - springboot app access properties using @Value
+
+
+    Process:
+        1) define custom properties in application.properties
+
+            coach.name = Mickey Mouse
+            team.name = Mickey Mouse Club
+
+        2) inject properties into Spring boot app using @Value
+
+            @Value("${coach.name}")
+            private String coachName;
+            
+            @Value("${team.name}")
+            private String teamName;
