@@ -92,7 +92,9 @@ JRE: contains all the Java API libraries
 
 
 == What is Maven ==
-    - Dependency manager like npm (build-automation tool)
+    - Project Management Tool like npm (build-automation tool)
+        - build management + dependencies management
+
     - When building java project, may require additional JAR files
         - Spring | Hibernate | Commons logging | JSON etc.
 
@@ -100,9 +102,58 @@ JRE: contains all the Java API libraries
             - Go to each project website to download JAR files
             - Manually add JAR files to build path
 
-        Maven Solution: (friendly helper / shopper)
-            - tell Maven dependencies
+        Maven Solution: (think like friendly helper / shopper)
+            - tell Maven dependencies required by projects
             - Maven download JAR files & make avail during compile / run
+
+
+        How Maven works:
+            1) there exist Maven Central Repository on internet
+            2) Inside project dir, specify in maven config file what are dependencies required
+            3) Maven check local repo (on local computer) for required files
+            4) If not in local repo, Maven look into remote repo & download required files to local repo (cache)
+            5) Maven will then build & run app
+
+        How Maven helps in dependency
+            - When using Spring, Maven knows Spring requires commons-logging
+            - Maven will grab additional items required by Spring
+
+        - Maven also handles class / build paths
+            - based on config file, Maven will add JAR files accordingly
+
+        
+    -- Maven Project Directory --
+        - have standard directory structure
+        - to standardize project directory structure amongst all dev teams
+
+            - pom.xml : config file for maven ("shopping list")
+
+            - "/src/main/java" : store java src codes
+                - <package_structure>/*.java src codes
+
+            - "/src/main/resources" : store properties / config files for app
+
+            - "/src/main/webapp : JSP | web config files + other assets (images / css / js etc)
+                -JSP (Java Server Pages): Webpages that support dynamic content (JSP tags for content <% %>)
+
+            - /src/test: Unit testing src codes + properties / config files used by unit testing
+
+            - /target: destination directory for compiled code, auto created by Maven
+
+
+    Benefits of Maven standard file structure:
+        1) Dev can find files easily
+        2) IDEs can easily read Maven projects (can share Maven projects across IDEs)
+
+    Benefits of Maven:
+        1) Dependency Management    
+            - Maven find JAR files for us
+        2) Build & Run projects
+            - No more buildpath / classpath issues
+        3) Standard directory structure
+        4) Join new project & be productive
+
+
 
 
 == Development Process ==
@@ -154,3 +205,17 @@ JRE: contains all the Java API libraries
         
     4) Go to localhost:8080 
         - should see Hello, World!
+
+
+
+== Spring Projects (Modules) ==
+
+    - Additional Spring modules built on top of Spring framework (add-ons)
+    - Only use what is needed
+        - Spring Cloud | Spring Data
+        - Spring Batch | Spring Security
+        - Spring Web Services | Spring LDAP (Lightweight Directory Access Protocol)
+        - many others...
+    
+    www.spring.io (To get more info on Spring)
+        - Projects -> Overview
