@@ -390,6 +390,7 @@ JRE: contains all the Java API libraries
 
 
 == Springboot dev tools ==
+
     - spring-boot-devtools
         - automatically restarts app when code updated (like nodemon)
         - simply add dependency in POM file, no need to add additional code
@@ -401,3 +402,54 @@ JRE: contains all the Java API libraries
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
         </dependency>
+
+
+
+
+== Springboot Actuator ==
+    - monitor / manage app + check app health + access app metrics
+    - exposes endpoints to monitor / manage app
+    - add dependency to POM file to use
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        * rightclick -> reload maven project
+
+    - automatically exposes endpoints for metrics 
+    - endpoints will be prefixed with /actuator
+        eg:
+            /actuator/health: health info about app
+            - by default, only /health is exposed
+            
+            /actuator/info : provides more info about app
+
+                - need to change config to expose 
+                    1) go to src/main/resources/application.properties
+
+                    2) 
+                        management.endpoints.web.exposure.include=health, info
+                        management.info.env.enabled=true
+
+                        Alternatively:
+                        management.endpoints.web.exposure.include=*
+                            - expose all actuator endpoints
+                            - Not recommended (should include security to show endpoints to authorized users)
+
+                    3) Update app info inside application.properties:
+
+                        info.app.name=My Super cool app
+                        info.app.description=Super fun app
+                        info.app.version=1.0.0
+
+                        * Properties starting with info. will be used by /info endpoint
+
+            localhost:8080/actuator/health
+        
+    - Different actuator endpoints:
+        /actuator/auditevents : audit events for app
+        /actuator/beans : list all beans registered in all
+        /actuator/mappings: list all @<Request>Mapping paths
+        (https://www.luv2code.com/actuator-endpoints)
