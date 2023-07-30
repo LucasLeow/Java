@@ -215,6 +215,17 @@ JRE: contains all the Java API libraries
             - Inside pom.xml: (3 sections)
                 - project meta data
                     - project name, version, output file type (JAR | WAR) etc.
+
+                - Springboot Starter Parent 
+                    - special starter providing maven defaults (java version, UTF-8 encoding etc.)
+                    - specified with <parent> tag
+                    - Springboot version specified here, all other springboot starters inherit version from parent
+                    - to overwrite default, specify in <properties> tag
+
+                    	<properties>
+                            <java.version>17</java.version>
+                        </properties>
+
                 - dependencies
                     -  list of projects (modules) app is dependent on
                         - Spring, Hibernate, JSON etc.
@@ -255,7 +266,7 @@ JRE: contains all the Java API libraries
                                 View -> Tool Windows -> Maven -> Select desired app -> Dependencies -> relevant starter dropdown
                 
                         
-                        
+                
                 
                 - plug-ins
                     - custom tasks to run
@@ -378,5 +389,15 @@ JRE: contains all the Java API libraries
 
 
 
+== Springboot dev tools ==
+    - spring-boot-devtools
+        - automatically restarts app when code updated (like nodemon)
+        - simply add dependency in POM file, no need to add additional code
+        - some IDE, work out of box. For IntelliJ community, need some configuration
+            1) Settings -> Build, Execution, Deployment -> Compiler -> check "Build Project Automatically"
+            2) Settings -> Advanced Settings -> check "Allow auto-make to start even if developed app is currently running"
 
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+        </dependency>
