@@ -220,9 +220,42 @@ JRE: contains all the Java API libraries
                         - Spring, Hibernate, JSON etc.
 
                     - <artifactId> spring-boot-starter-web </artifactId>
-                        - Spring boot starters : collection of Maven dependencies
+                        - Spring boot starters : collection of dependencies grouped together
                             -  spring-web | spring-webmvc | hibernate-validator | tomcat etc.
                         - Developers dont have to specify all individual dependencies, just user starter
+                        - 1 stop shop containing all basic necessary dependencies
+                        - tested & verified by Spring Dev team
+                        - makes it easier for devs to get started with Spring
+
+                        eg:
+                        Building Spring MVC app:
+                            - need org.springframework | org.hibernate.validator | org.thymeleaf 
+                            - + 3 more artifacts
+                            - very long
+                        
+                        solution: org.springframework.boot + artifact: spring-boot-starter-web 
+                            - becomes compact
+
+                        - How to get spring-boot-starters in pom.xml file? -
+                            - specify dependencies in Spring Initializr
+
+                            eg: If want Web + Security
+                            add the following projects:
+                                - Spring Web (spring-boot-starter-web)
+                                - Spring Security (spring-boot-starter-security)
+                                - Spring Data JPA (spring-boot-starter-jpa)
+                                - ThymeLeaf (spring-boot-starter-thymeleaf)
+
+                        - 30+ Springboot starters from Spring dev team
+                        (https://www.luv2code.com/spring-boot-starters)
+
+                        - How to view what dependencies are in a Springboot starter? -
+                            - via IDE dependency manager (different IDE, slightly different)
+                            For IntelliJ:
+                                View -> Tool Windows -> Maven -> Select desired app -> Dependencies -> relevant starter dropdown
+                
+                        
+                        
                 
                 - plug-ins
                     - custom tasks to run
