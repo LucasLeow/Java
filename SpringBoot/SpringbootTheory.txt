@@ -389,6 +389,9 @@ JRE: contains all the Java API libraries
 
 
 
+
+
+
 == Springboot dev tools ==
 
     - spring-boot-devtools
@@ -452,4 +455,33 @@ JRE: contains all the Java API libraries
         /actuator/auditevents : audit events for app
         /actuator/beans : list all beans registered in all
         /actuator/mappings: list all @<Request>Mapping paths
+        /actuator/threaddump : list all threads running in app
+            - useful for analyzing & profiling app's performance
         (https://www.luv2code.com/actuator-endpoints)
+
+
+    - Springboot Actuator Security -
+        - add Spring Security to secure endpoints
+
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        - user have to enter user & pw to access certain endpoints
+            default username: user
+            password: generated in server-side console
+
+        - To add custom user & pw, include in application.properties config file
+
+            spring.security.user.name=lucas
+            spring.security.user.password=root
+
+        - Can actually add more customized security features
+            - using database for roles, encrypted passsword etc.
+
+
+        - can also exclude certain actuator endpoints (in application.properties)
+            management.endpoints.web.exposure.exclude=health, info
+            (excludes /actuator/health & /actuator/info)
