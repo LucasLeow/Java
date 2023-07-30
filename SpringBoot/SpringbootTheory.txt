@@ -485,3 +485,38 @@ JRE: contains all the Java API libraries
         - can also exclude certain actuator endpoints (in application.properties)
             management.endpoints.web.exposure.exclude=health, info
             (excludes /actuator/health & /actuator/info)
+
+
+
+== Running Springboot from cmd line ==
+    - want to run springboot app outside of IDE
+    - don't need to have IDE opened
+    - server embedded in JAR file, no need to have separate server installed / running
+
+        - mycoolapp.jar
+            - source codes
+            - Tomcat server
+
+        - 2 options to run:
+
+            1) "java -jar <jarfile>"
+            2) "mvnw spring-boot:run" (Springboot maven plugin)
+                - don't need Maven installed (Maven wrapper file mvnw.cmd provided using Spring Initializr)
+                - if not found, auto downloads correct version & runs
+                - possible because inside pom.xml plugins -> spring-boot-maven-plugin
+
+
+    Steps:
+        1) go to project dir
+        2) open terminal -> "mvnw package" (create .jar file in target dir)
+            - ensure JAVA_HOME system var set pointing to jdk dir in C drive
+        3) go to target dir
+        4) java -jar mycoolapp-0.0.1-SNAPSHOT.jar
+        5) Ctrl + c to exit app
+
+        OR
+
+        1) go to project dir
+        2) open terminal -> "mvnw package"
+        3) mvnw spring-boot:run (auto look in target dir to run .jar file)
+            - dont need to cd into target dir 
