@@ -140,7 +140,6 @@ JRE: contains all the Java API libraries
 
             - /target: destination directory for compiled code, auto created by Maven
 
-
     Benefits of Maven standard file structure:
         1) Dev can find files easily
         2) IDEs can easily read Maven projects (can share Maven projects across IDEs)
@@ -152,6 +151,71 @@ JRE: contains all the Java API libraries
             - No more buildpath / classpath issues
         3) Standard directory structure
         4) Join new project & be productive
+
+
+    - Maven Key Concepts -
+
+        * Java Project: IDE-level grouping
+            - set of sources files, configs, assets that make up a working app
+
+        - pom.xml -
+
+            - Project Object Model file
+            - config file for project (tell Maven dependencies of app)
+            - always located in root of Maven project
+
+            - Inside pom.xml: (3 sections)
+                - project meta data
+                    - project name, version, output file type (JAR | WAR) etc.
+                - dependencies
+                    -  list of projects (modules) app is dependent on
+                        - Spring, Hibernate, JSON etc.
+                - plug-ins
+                    - custom tasks to run
+                        - generate JUnit test report etc.
+                
+
+
+            - Project Coordinates - (GAV) Group, Artifact, Version (Lingo)
+
+                - uniquely identify a project
+                - akin to GPS lat & long, precise info for finding project
+
+                    <groupId> com.luv2code </groupId> ("City")
+                    <artifactId> mycoolapp </artifactId> ("Street")
+                    <version> 1.0 FINAL </version> ("House number") (optional)
+
+                    groupId: Name of company | group | organization
+                        - convention: reverse domain: com.luv2code etc.
+                    
+                    artifactId: Name of project (eg. mycoolapp)
+
+                    version: specific release version (optional)
+                        if under development: 1.0-SNAPSHOT
+
+            
+
+            - Adding Dependencies (in pom.xml) -
+
+                <dependencies>
+                    <dependency>
+                        <groupId> </groupId>
+                        <artifactId> </artifactId>
+                        <version> </version>
+                    </dependency>
+
+                    <dependency>
+                        <groupId> </groupId>
+                        <artifactId> </artifactId>
+                        <version> </version>
+                    </dependency>
+                </dependencies>
+
+
+                - How to Find Dependency Coordinates? -
+                    1) Visit Project page eg: spring.io | hibernate.org etc. (good for smaller proj)
+                    2) https://search.maven.org (easiest approach, esp for large proj) (Maven central repo)
+            
 
 
 
