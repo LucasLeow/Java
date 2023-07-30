@@ -545,6 +545,115 @@ JRE: contains all the Java API libraries
 
             @Value("${coach.name}")
             private String coachName;
-            
+
             @Value("${team.name}")
             private String teamName;
+
+
+== Configuring Spring Boot Server ==
+    - configure via application.properties file in src/main/resources
+        - server port
+        - context path
+        - actuator
+        - security
+        etc. (over 1000 properties) (https://www.luv2code.com/spring-boot-props)
+        - Properties are grouped into the following:
+            - core
+                - logging.level.org.springframework=DEBUG
+                - logging.level.org.hibernate=TRACE
+                - logging.level.com.luv2Ccode=INFO
+                - logging.file.name=my-logs.log
+                - logging.file.path=c:/myapps/demo
+            - web
+                - server.port=7070 (default: 8080)
+                - server.servlet.context-path=/my-silly-app (default: "/")
+                    - context-path = root path, default is /
+                    - https://localhost:7070/my-silly-app/about
+                - server.servlet.session.timeout=15m (default = 30mins timeout)
+            - security
+                - spring.security.user.name=admin (default: user)
+                - spring.security.user.password=root (default provided in server-side terminal)
+            - data
+                - spring.datasource.url=jdbc:mysql://localhost:3306/ecommerce (JDBC URL of database)
+                - spring.datasource.username=scott (login username of database)
+                - spring.datasource.password=tiger (login password of database)
+            - actuator
+                - management.endpoints.web.exposure.include=*
+                - management.endpoints.web.exposure.exclude=beans, mapping
+                - management.endpoints.web.base-path=/actuator (default is /actuator)
+                    - localhost:7070/actuator/health
+            - integration
+            - devtools
+            - testing
+
+
+
+
+
+
+
+
+
+== Spring Framework Overview ==
+
+ - Goals of Spring Framework -
+    - Lightweight development with Java POJO (Plain Old Java Objects)
+    - Dependency Injection to promote loose coupling
+    - Minimize boilerplate Java code
+        - boilerplate: sections of repeated code in multiple places
+
+
+
+- Core Container
+
+    Spring Beans:
+        - Objects that form backbone of app
+        - managed by Spring Inversion of Control (IoC) containers
+
+    SpEL:
+        - Spring Expression Language
+        - supports querying & manipulating object graph @ runtime
+        - language used in config files to refer to other beans
+    
+
+- AOP:
+    - Aspect Oriented Programming
+    - Add application-wide services
+        - Logging
+        - Security
+        - Transactions etc.
+    - apply services to objects
+    
+
+- Data Access Layer:
+    - For communicating with Database
+
+    - JDBC: Java Database Connection
+        - Spring provides helper classes to make DB access much easier (reduce source code by 50%)
+
+    - ORM: Object Relational Mapping
+        - hook into Hibernate / JPA (Java Persistence API)
+
+        JPA: Java persistence API
+            - Specification that defines an API 
+            - Hibernate implements JPA
+    
+    - JMS: Java Message Service
+         - Send message to message queue async
+        
+    - Transaction Manager provided by Spring
+        - Transaction methods on Database calls & other stuffs
+    
+
+- Web Layer
+    - Home for Spring MVC framework
+    - Build webapp using Spring Core | Spring Controllers | Spring Views
+
+
+Test Layer
+    - for test driven development
+    - Mock Objects for mocking servlets (extend capabilities of server)
+    - Out-of-container testing
+
+    - Integration testing
+        - create app & testing
