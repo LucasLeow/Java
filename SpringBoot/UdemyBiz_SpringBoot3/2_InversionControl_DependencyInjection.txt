@@ -1,0 +1,71 @@
+Inversion of Control:
+    - outsourcing construction & management of objects
+
+    Coding Scenario:
+        - Fitness app that communicates with relevant fitness coach
+            - different sports coach will provide different program
+
+        - App communicate with "Object Factory"
+        - Object factory will return relevant coach (based on config)
+            - cricketCoach
+            - HockeyCoach
+            - BaseballCoach
+
+    Spring Container:
+        - create & manage objects (inversion of control)
+        - Inject object dependencies (dependency injection)
+
+        - Configuring Spring Container -
+            - XML config file (legacy)
+            - Java Annotation (modern)
+            - Java source code (modern)
+
+
+== Spring Dependency Injection ==
+    - based on dependency inversion principle
+    - client delegates to another object the responsibility of providing dependencies
+
+    eg (Car Factory):
+        - User wants a car
+        - User request car object from "Car Factory"
+        - "Car Factory" responsible for assembling car & returns to user
+        - User can use car out-of-box, without worrying about dependency
+
+        "Car Factory" injects the dependency
+
+    Real eg:
+        - app request coach object from Spring Container (Object factory)
+        - different coach (cricket | hockey | baseball) have different dependencies
+        - Spring container injects the necessary dependency and return coach object to app
+
+
+    Demo eg:
+
+        DemoController wants to use "Coach" object
+            - Coach provide daily workouts
+            - Coach is known as helper
+            - DemoController dependent on Coach (need to inject to DemoController)
+
+
+    - Injection Types -
+
+        - Constructor Injection
+            - use when have required dependencies
+            - recommended by spring dev team as first choice
+
+        - Setter Injection
+            - use when have optional dependencies
+            - if dependency not provided, app can provide reasonable default logic
+
+
+    - Spring AutoWiring -
+        - For dependency injection
+        - Spring will look for class that matches & auto injects it
+            - match by:
+                - class
+                - interface
+
+    - Autowiring example (Inject Coach to Controller) -
+        - Spring scan for @Components
+        - Any Coach interface implementation?
+        - if yes, inject

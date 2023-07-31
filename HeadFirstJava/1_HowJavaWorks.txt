@@ -51,7 +51,6 @@
 	- print: prints on same line
 	
 	
-	
 == JVM vs Compiler ==
 
 	-- JVM --
