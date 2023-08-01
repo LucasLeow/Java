@@ -62,8 +62,8 @@ Inversion of Control:
 
 
     - Autowiring example (Inject Coach to Controller) -
-        - Spring scan for @Components
-        - Any Coach interface implementation?
+        - Spring scan for @Components for dependency implementation
+        - eg: Any Coach interface implementation? @Component at BowlingCoach
         - if yes, inject
 
 
@@ -97,7 +97,7 @@ Inversion of Control:
 
                 import org.springframework.stereotype.Component;
 
-                @Component <- component annotation makes class a Spring bean (make avail for dependency injection)
+                @Component <- component annotation makes class a Spring bean (make avail for Spring Scanning for injection)
                 public class BowlingCoach implements Coach {
                     @Override
                     public String getDailyWorkout() {
@@ -109,7 +109,7 @@ Inversion of Control:
 
         - marks class as Spring Bean
             - Spring Bean: Regular Java class managed by Spring
-        - makes bean available for dependency injection
+        - makes bean available for dependency injection (via scanning)
 
         2) create demo REST controller (middleman)
         (Step 2, 3 & 4 in same file)
@@ -124,7 +124,7 @@ Inversion of Control:
                     ..
                 }
 
-        3) create constructor in Controller class for injection
+        3) create constructor in (Middleman) Controller class for injection
 
                 Still in same file: DemoController.java
                 package com.luv2code.springcoredemo;
@@ -244,3 +244,76 @@ Inversion of Control:
                     "com.luv2code.util"
                         }
                 )
+
+
+== Setter Injection ==  
+    - inject dependencies by calling setter methods on class
+
+
+    - Development Process (Setter Injection) -
+
+        1) Create setter methods inside (Middleman) Controller for injection
+
+        2) Configure dependency injection with @Autowired annotation on setter
+
+        @RestController
+        public class DemoController {
+            private Coach myCoach;
+
+            @Autowired
+            public void setCoach(Coach theCoach) {
+                myCoach = theCoach;
+            }
+        }
+
+        * Spring perform operations behind the scenes
+
+            Coach theCoach = new BowlingCoach();
+            DemoController demo = new DemoController();
+            demo.setCoach(theCoach);
+
+        * Can inject dependencies by calling ANY method on class
+            - just have @Autowired annotation
+
+
+== Field Injection ==
+    - not recommended by spring dev team
+    - makes code harder to unit test
+    - still present in legacy projects, good to know only
+
+    - Inject dependencies by setting field values on class directly (even private fields)
+
+    1) Configure dependency injection with Autowired Annotation
+
+        @Autowired
+        private Coach myCoach; // Spring will inject coach implementation (if found, even on private field)
+            - no need for constructor / setters, spring set field directly
+
+
+
+== Qualifiers (Solution to multiple implementation of interface)==
+
+    - if multiple coach implementation, Spring throws error
+    - eg: required single bean, 4 found
+        - baseballCoach
+        - cricketCoach
+        - tennisCoach
+        - trackCoach
+
+    - Solution : @Qualifier annotation (to be specific)
+        - using beanID
+            - beanID: same as class name but first letter lowercase
+            actual class: CricketCoach
+            bean ID: cricketCoach
+
+        Constructor Injection:
+            @Autowired
+            public DemoController(@Qualifier("cricketCoach") Coach theCoach) {
+                myCoach = theCoach
+            }
+
+        Setter Injection:
+            @Autowired
+            public void setCoach(@Qualifier("cricketCoach") Coach theCoach) {
+                myCoach = theCoach
+            }
