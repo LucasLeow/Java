@@ -1,5 +1,6 @@
 Inversion of Control:
     - outsourcing construction & management of objects
+    - a design pattern
 
     Coding Scenario:
         - Fitness app that communicates with relevant fitness coach
@@ -11,12 +12,12 @@ Inversion of Control:
             - HockeyCoach
             - BaseballCoach
 
-    Spring Container:
-        - create & manage objects (inversion of control)
+    Spring Container: (performs inversion of control)
+        - create & manage objects 
         - Inject object dependencies (dependency injection)
 
         - Configuring Spring Container -
-            - XML config file (legacy)
+            - XML config file (legacy) (seldom used)
             - Java Annotation (modern)
             - Java source code (modern)
 
@@ -24,6 +25,7 @@ Inversion of Control:
 == Spring Dependency Injection ==
     - based on dependency inversion principle
     - client delegates to another object the responsibility of providing dependencies
+    - eg: app ask info from Controller, Controller get info from database
 
     eg (Car Factory):
         - User wants a car
@@ -32,20 +34,12 @@ Inversion of Control:
         - User can use car out-of-box, without worrying about dependency
 
         "Car Factory" injects the dependency
+        - Car Factory here is the controller
 
     Real eg:
         - app request coach object from Spring Container (Object factory)
         - different coach (cricket | hockey | baseball) have different dependencies
         - Spring container injects the necessary dependency and return coach object to app
-
-
-    Demo eg:
-
-        DemoController wants to use "Coach" object
-            - Coach provide daily workouts
-            - Coach is known as helper
-            - DemoController dependent on Coach (need to inject to DemoController)
-
 
     - Injection Types -
 
@@ -59,13 +53,118 @@ Inversion of Control:
 
 
     - Spring AutoWiring -
-        - For dependency injection
-        - Spring will look for class that matches & auto injects it
-            - match by:
-                - class
-                - interface
+        (org.springframework.beans.factory.annotation.Autowired) <- AutoWired class
+        - For purpose of dependency injection
+        - Spring will look for class that matches class | interface & auto injects it
+
+            @Autowired <- Annotation tells Spring to inject dependency
+            public DemoController(Coach theCoach) <- Autowired applied to constructor (DemoController)
+
 
     - Autowiring example (Inject Coach to Controller) -
         - Spring scan for @Components
         - Any Coach interface implementation?
         - if yes, inject
+
+
+    - Dependency Injection eg 2 -
+
+        - WebBrowser
+            - sends request to DemoController via (/dailyworkout)
+        - DemoController
+            - communicates with "Coach Factory" via (getDailyWorkout())
+        - "Coach Factory" returns string of guiding text
+        - DemoController passes string to Web Browser
+
+        DemoController wants to use "Coach" object
+            - Coach provide daily workouts
+            - Coach is known as helper
+            - DemoController dependent on Coach (need to inject to DemoController)
+
+
+    Development Process (Constructor Injection) (Single "coach" implementation eg)
+        1) Define dependency interface & class
+
+            File: Coach.java
+                package com.luv2code.springcoredemo;
+
+                public interface Coach {
+                    String getDailyWorkout();
+                }
+
+            File: BowlingCoach.java
+                package com.luv2code.springcoredemo;
+
+                import org.springframework.stereotype.Component;
+
+                @Component <- component annotation makes class a Spring bean (make avail for dependency injection)
+                public class BowlingCoach implements Coach {
+                    @Override
+                    public String getDailyWorkout() {
+                        return "Practice fast bowling for 15 minutes";
+                    }
+                }
+
+        @Component annotation
+
+        - marks class as Spring Bean
+            - Spring Bean: Regular Java class managed by Spring
+        - makes bean available for dependency injection
+
+        2) create demo REST controller (middleman)
+        (Step 2, 3 & 4 in same file)
+
+            File: DemoController.java
+                package com.luv2code.springcoredemo;
+
+                import org.springframework.web.bind.annotation.RestController;
+
+                @RestController
+                public class DemoController { 
+                    ..
+                }
+
+        3) create constructor in Controller class for injection
+
+                Still in same file: DemoController.java
+                package com.luv2code.springcoredemo;
+
+                import org.springframework.beans.factory.annotation.Autowired;
+                import org.springframework.web.bind.annotation.RestController;
+
+                @RestController
+                public class DemoController {
+                    private Coach myCoach; <- private field to store dependency
+
+                    @Autowired <- Autowired tells spring to inject dependency | of only 1 constructor, @Autowired optional
+                    public DemoController(Coach theCoach) {
+                        myCoach = theCoach;
+                    }
+                }
+
+        4) add @GetMapping for /dailyworkout
+
+                (still in same file)
+                File: DemoController.java
+                package com.luv2code.springcoredemo;
+
+                import org.springframework.beans.factory.annotation.Autowired;
+                import org.springframework.web.bind.annotation.GetMapping;
+                import org.springframework.web.bind.annotation.RestController;
+
+                @RestController
+                public class DemoController {
+                    private Coach myCoach;
+
+                    @Autowired <- Autowired attached to constructor
+                    public DemoController(Coach theCoach) {
+                        myCoach = theCoach;
+                    }
+
+                    @GetMapping("/dailyworkout")
+                    public String getDailyWorkout() {
+                        return myCoach.getDailyWorkout();
+                    }
+                }
+
+    
