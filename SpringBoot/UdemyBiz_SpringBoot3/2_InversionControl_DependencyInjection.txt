@@ -168,3 +168,79 @@ Inversion of Control:
                 }
 
     
+== Spring Framework (Behind the scenes for Dependency Injection) ==
+    
+    Coach theCoach = new BowlingCoach();
+    DemoController demo = new DemoController(theCoach);
+
+    - Spring seem simple for small apps
+    - Spring provides much more functionality, especially for enterprise apps
+        - Spring Web | Database CRUD | Security | Endpoints etc.
+    
+
+== Component Scanning ==
+
+    - Spring scan Java classes for special annotations (eg: @Component)
+    - auto register beans in Spring container (bean = java class in Spring)
+
+    - inside SpringcoredemoApplication.java: (created by spring initializr)
+        - import org.springframework.boot.autoconfigure.SpringBootApplication;
+            - Behind the scenes:
+                - enables auto config | component scanning | additional config 
+                    - @EnableAutoConfiguration : Enables Springboot auto-config support
+                    - @ComponentScan : enable component scanning of current package + sub packages
+                    - @Configuration : register extra beans with @Bean or import other config classes
+
+        - import org.springframework.boot.SpringApplication;
+            - Allow bootstrapping of Spring boot app
+                - Behind the scenes:
+                    - Creates application context & register all beans
+                    - starts embedded server (Tomcat etc.)
+
+    - Springboot will only auto-scan components in package where app resides + all sub packages within that package
+    - Any other sibling packages with app package will not be scanned
+
+    - (eg: com.luv2code.springcoredemo ) <- main app package
+         com.luv2code.springcoredemo.items <- sub-package, will also be scanned
+
+    - If want to scan other packages:
+        - inside SpringcoredemoApplication.java:
+            @SpringBootApplication(
+                scanBasePackages={
+                    "com.luv2code.springcoredemo",
+                    "com.luv2code.utils",
+                    "com.luv2code.cart"
+                }
+            )
+            public class SpringcoredemoApplication {
+                ...
+            }
+
+
+    == Component Scanning Code Eg ==
+
+        1) Create new sub package (right click com.luv2code.springcoredemo)
+            - com.luv2code.springcoredemo.rest
+            - com.luv2code.springcoredemo.common
+
+        2) Move DemoController.java into "rest" package
+            - Move Coach & BowlingCoach into "common" package
+
+        3) Run app, still works fine since files are moved to sub-packages
+        (Spring still scans for components in sub-packages)
+
+
+        - Part 2 -
+        
+        1) Create new sibling package (right click from "java" dir instead)
+            - com.luv2code.util
+
+        2) move Coach & BowlingCoach to com.luv2code.util
+
+        3) Go to SpringcodedemoApplication.java
+            - @SpringBootApplication(
+                scanBasePackages = {
+                    "com.luv2code.springcoredemo",
+                    "com.luv2code.util"
+                        }
+                )
