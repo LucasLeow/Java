@@ -1,5 +1,7 @@
 Inversion of Control:
-    - outsourcing construction & management of objects
+    - outsourcing construction & management of objects (using controller)
+    - instead of direct interaction eg: Person & Pet | Person & Coach
+        - Person <-> Controller <-> Pet | Person <-> Controller <-> Coach
     - a design pattern
 
     Coding Scenario:
@@ -178,7 +180,7 @@ Inversion of Control:
         - Spring Web | Database CRUD | Security | Endpoints etc.
     
 
-== Component Scanning ==
+== @Component Scanning ==
 
     - Spring scan Java classes for special annotations (eg: @Component)
     - auto register beans in Spring container (bean = java class in Spring)
@@ -194,7 +196,7 @@ Inversion of Control:
         - import org.springframework.boot.SpringApplication;
             - Allow bootstrapping of Spring boot app
                 - Behind the scenes:
-                    - Creates application context & register all beans
+                    - Creates application context (load configuration) & register all beans
                     - starts embedded server (Tomcat etc.)
 
     - Springboot will only auto-scan components in package where app resides + all sub packages within that package
@@ -217,7 +219,7 @@ Inversion of Control:
             }
 
 
-    == Component Scanning Code Eg ==
+    == @Component Scanning Code Eg ==
 
         1) Create new sub package (right click com.luv2code.springcoredemo)
             - com.luv2code.springcoredemo.rest
@@ -291,7 +293,7 @@ Inversion of Control:
 
 
 
-== Qualifiers (Solution to multiple implementation of interface)==
+== @Qualifiers Annotation (Solution to multiple implementation of interface)==
 
     - if multiple coach implementation, Spring throws error
     - eg: required single bean, 4 found
@@ -317,3 +319,239 @@ Inversion of Control:
             public void setCoach(@Qualifier("cricketCoach") Coach theCoach) {
                 myCoach = theCoach
             }
+
+
+
+== @Primary annotation ==
+    - alternate solution to @Qualifier annotation
+    - don't care about specific implementation
+    - if there exist multiple implementations, give me a primary coach
+    - to be implemented by the implementation class
+    * ONLY 1 implementation, cannot have multiple @Primary, error thrown
+    - @Qualifier has higher priority (more specific)
+        - Mixing @Qualifier & @Primary is not useful
+
+    @Component
+    @Primary
+    public class TrackCoach implements Coach {
+        @Override
+        public String getDailyWorkout() {
+            return "Run a hard 5k!";
+        }
+    }
+
+    - With @Primary implemented, no need to use @Qualifier in Controller
+    - In general, @Qualifier recommended
+        - more specific + higher priority
+
+
+== Lazy Initialization ==
+
+    - by default, all beans are initialized when app starts
+        - Spring creates instance of each & make available
+
+    - Can check:
+        - inside constructor:
+
+        public CricketCoach() {
+            System.out.println("In constructor: " + getClass().getSimpleName());
+        }
+            
+
+    - Lazy Initialization - (dont init all beans when app starts)
+        - only create beans when:
+            1) needed for dependency injection
+            2) explicitly requested
+
+        - simply using @Lazy annotation to mark bean as lazy (wont create during startup)
+
+        @Component
+        @Lazy
+        public class TrackCoach implements Coach {
+            System.out.println("In constructor: " + getClass().getSimpleName());
+        }
+
+    
+        - Global config: Lazy Initialization
+            - to prevent adding annotation to every single class (tedious)
+            - Go to application.properties:
+                spring.main.lazy-initialization=true
+                (all beans are lazy, including DemoController)
+
+    Advantage:
+        - only create objects as needed
+        - may help with faster startup time if large number of components
+
+    Disadvantage:
+        - may not discover config issues until too late
+        - need to ensure have sufficient memory for all beans once created
+
+    (lazy init disabled by default, avoid premature optimization)
+
+
+== Bean Scope ==
+    - Scope : Lifecycle of a bean
+        - how long does bean live
+        - how many instances of bean created
+        - how is bean shared
+
+    - Default scope: singleton
+        - only 1 instance created by default (shared amongst different items)
+        - cached in memory
+        - all dependency injection for the bean will reference SAME bean
+
+        // theCoach & Anothercoach point to the same instance
+            public DemoController(
+                @Qualifier("cricketCoach") Coach theCoach,
+                @Qualifier("cricketCoach") Coach AnotherCoach
+            ) {
+
+            }
+
+    - Can explicitly define bean scope
+
+        @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) 
+        public class CricketCoach implements Coach {
+            ...
+        }
+
+    - scope types:
+        - singleton : create single shared instance of bean (SCOPE_SINGLETON)
+        - prototype : create new bean instance for each container request (new instance for each injection)
+        - request : scoped to http web req, only for web apps (SCOPE_REQUEST)
+        - session : scoped to http web session, only for web apps (SCOPE_SESSION)
+        - global-session : scoped to global http session, for web apps
+
+
+== Bean Lifecycle Methods ==
+    
+    - Bean Lifecycle -
+        1) Container Started (App start)
+        2) Bean instantiated (not lazy by default)
+        3) Dependencies injected (as required)
+        4) Internal Spring Processing
+
+        5) Execute custom init method <- can implement Bean Lifecycle method / hook
+
+        6) Custom destroy method (when app shutdown)
+
+
+    - Bean Methods / Hooks
+        - add custom code during bean initialization
+        - calling custom business logic
+        - setting up handles to resources (db, sockets, files etc.)
+        - custom code during bean destruction (cleaning up handles to resources)\
+            - close db / stream etc.
+
+    - using:
+        - @PostConstruct annotation
+        - @PreDestroy annotation
+            * For prototype-scope, Spring does not call destroy method
+            - prototype beans are lazy by default, don't need to use @Lazy
+
+
+    @Component
+    public class CricketCoach implements Coach {
+        public CricketCoach() {
+            System.out.println("Inside constructor");
+        }
+
+        @PostConstruct
+        public void doMyStartupStuff() {
+            System.out.println("Doing startup stuff" + getClass().getSimpleName());
+        }
+
+        @PreDestroy
+        public void doMyCleanUpStuff() {
+            System.out.println("Doing Cleanup" + getClass().getSimpleName());
+        }
+    }
+
+
+== Configuring Beans with Java code @Bean instead of @Component annotation ==
+    - use case: to make 3rd party class available to spring framework as bean
+    - especially when no access to 3rd party source code
+
+    1) Create @Configuration class
+        - create new package (config) to store all config classes
+        (com.luv2code.springcoredemo.config)
+
+    2) Define @Bean method to configure bean
+        - bean id defaults to method name
+        - bean id = swimCoach in this eg.
+
+            @Configuration
+            public class SportConfig {
+                
+                @Bean
+                public Coach swimCoach() {
+                    return new SwimCoach();
+                }
+
+            }
+
+        * Can give bean custom id
+        @Bean("my_custom_id")
+
+        then in controller:
+        public DemoController(@Qualifier("my_custom_id") Coach theCoach) {
+            myCoach = theCoach;
+        }
+
+
+    3) Inject bean into controller
+        - inject Bean using bean id & @Qualifier
+
+        @RestController
+        public class DemoController {
+
+            private Coach myCoach;
+
+            @Autowired
+            public DemoController(@Qualifier("swimCoach") Coach theCoach) { 
+                System.out.println("In swimcoach Constructor");
+                myCoach = theCoach;
+            }
+        }
+
+
+    - @Bean use cases -
+
+        - make existing 3rd party class available to Spring framework
+        - may not have access to source code of 3rd party class
+            - cannot implement @Component, therefore must use @Bean
+
+
+    Real world eg:
+        - Store data in AWS S3
+        - Want to use AWS S3 as Spring bean in app
+        - AWS S3 code part of AWS SDK (cannot modify source code, i.e add @Component)
+        - can configure it as spring bean using @Bean
+
+        @Configuration
+        public class DocumentsConfig {
+
+            @Bean
+            public S3Client remoteClient() {
+                ProfileCredentialsProvider.credentialsProvider = ProfileCredentialsProvider.create();
+                Region region = Region.US_EAST_1;
+                S3Client s3Client = S3Client.builder()
+                    .region(region)
+                    .credentialsProvider(credentialsProvider)
+                    .build();
+
+                return s3Client; // s3Client is a bean
+            }
+        }
+
+        - Inject s3Client as bean:
+
+        @Component
+        public class DocumentsService {
+            private S3Client s3Client;
+
+            @Autowired 
+            public DocumentsService(S3Client thes3client) {
+                s3Client = thes3client;
+            }
+        }
