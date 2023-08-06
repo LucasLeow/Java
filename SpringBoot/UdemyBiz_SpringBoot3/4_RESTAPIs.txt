@@ -1,0 +1,254 @@
+Keywords to search (code)
+    - Spring Rest Controller
+    - REST POJO
+        - how java convert java objects to JSON automatically using Jackson module etc.
+    - Spring REST Path Variables (eg: getting student by ID)
+
+Learnings
+    - Create REST APIs / Web Services with Spring @RestController
+    - REST Concepts, JSON, HTTP
+    - CRUD Interface with Spring REST
+
+Business Problem used:
+    - client app providing weather report for a city
+    - need weather data from external service
+
+
+Application Architecture
+
+    Weather App <-> Weather Service (External)
+        - Weather App provide /city
+        - Weather Service provides data
+
+    Q1) How to connect to weather service?
+        - Make REST API calls over HTTP
+
+        REST : Representational State Transfer
+            - Server responds to CRUD Requests in standard way based on URL 
+            - treat all server URLs as access points for various resources on server
+            - GET | PUT | POST | DELETE (The 4 standard HTTP methods of REST APIs)
+        
+    Q2) What programming language to use to connect?
+        - REST is language independent
+        - can use ANY programming language typically with frameworks already developed
+        - REST calls made over HTTP
+        - eg: Spring MVC app + My Weather app (C#) + My Weather iphone App (Swift) all can get data from Weather service
+
+    Q3) What is the data format?
+        - REST can use any data format
+        - common is XML & JSON (most popular & modern)
+
+
+    - Online weather service: openweathermap.org
+        - provide weather data via API
+        - can be any other websites, just google the required data service
+            eg:
+                - flight data
+                - country weather data
+                - currency converter (get market currency data)
+                - movie ticket service
+                - customer relationship Manager (CRM) app
+                    - get customers data
+    
+    - Refer to API documentation provided by data service
+
+    REST API | REST Web services | REST services all mean the same thing
+
+
+    == JSON Basics ==
+        - Language independent (not just for JS)
+        - Can be used with any programming language
+            - Java, C#, Python etc.
+        - keys should always be with ""
+        - values can be of any types
+            - Numbers : no quotes
+            - String : double quotes
+            - Boolean
+            - Nested JSON object
+            - Array
+            - Null
+
+
+== REST HTTP basics ==
+    - most common use of REST is over HTTP
+    - can use HTTP methods for CRUD operations
+
+        - GET
+        - PUT : Update existing entity | can also use to create (idempotent)
+        - POST : Create new entity (non-idempotent, will keep creating even same objects, modifying primary id)
+        - DELETE
+
+        CRM App (Client) (Request) <-> (Response) CRM REST Service (Server)
+
+            Request Message (Request Content)
+                - Request line : Has the actual HTTP method
+                - Headers : Request Metadata
+                - Body : Content of message (payload) (if providing info to server)
+            
+
+            Response Message (Response content)
+                - Response Line : Server protocol + Status code (200, 404 etc.)
+                - Header : Response metadata
+                    - datatype : XML / JSON etc.
+                    - size / length of data
+                - Body : Content of message (data sent back to client as JSON or XML etc.)
+
+
+            - MIME Content Type -
+                - message format described by MIME content type
+                - Multipurpose Internet Mail Extension
+
+                Syntax: type/sub-type
+                - text/html
+                - text/plain
+                - application/json
+                - application/xml
+
+            - Client Tool -
+                - Send HTTP requests to REST Web Service
+                - Postman
+
+
+== Spring Rest Controller ==
+    - to be used as a Service (server) & return response when url API call made to server
+    - own localhost can be used as server
+
+    REST client <-> REST Service (Controller code is here)
+    (Client is webbrowser / Postman)
+
+    eg:
+
+    @RestController
+    @REquestMapping("/test") // changes root from "/" to "/test"
+    public class DemoRestController {
+
+        @GetMapping("/hello") // REST endpoint for /test/hello
+        public String sayHello() {
+            return "Hello World!";
+        }
+
+    }
+
+    Testing REST client with Postman / webbrowser
+        http://localhost:8080/test/hello
+
+    Web browser vs Postman
+        - simple GET request, both are similar
+        - for advanced REST testing, POST & PUT have much better support
+            - setting content type
+            - specifying data to POST
+            - specifying / passing request headers, authentication etc.
+
+
+
+== Development Process (Spring Rest Controller) =
+    1) Add Maven Dependency (Spring Boot Starter Web)
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        
+    2) Create Spring REST Service using @RestController
+        - create new package "rest"
+        - create new class DemoRestController
+
+            @RestController
+            @RequestMapping("/test") // changes root from "/" to "/test"
+            public class DemoRestController {
+
+                @GetMapping("/hello") // REST endpoint for /test/hello
+                public String sayHello() {
+                    return "Hello World!";
+                }
+            }
+
+        Run main app
+        testurl: http://localhost:8080/test/hello
+
+
+== Java JSON Data Binding ==
+    - Data Binding: Convert JSON to Java POJO (plain old java object)
+        - or convert Java POJO into JSON
+
+        - aka Mapping | Serialization / Deserialization | Marshalling / Unmarshalling etc.
+
+    - Spring uses Jackson Project for data binding
+        - Jackson handles the data binding b/w JSON & POJO
+        - Jackson calls appropriate getter / setter method to convert data
+            - Jackson does not access internal private fields, only via setter methods
+
+            JSON -> POJO = Setter methods on POJO
+                setId
+                setFirstName
+                setLastName
+
+            POJO -> JSON = Getter methods on POJO then convert to JSON string
+                 getId
+                 getFirstName
+                 getLastName
+
+        eg:
+        JSON:
+         {
+            "id": 14,
+            "firstName": "Mario",
+            "lastName": "Carto"
+         }
+
+         Java POJO (Student):
+            private Integer id;
+            private String firstName;
+            private String lastName;
+        
+    * Spring auto handle Jackson integration
+        - JSON data passed to Rest Controller converted to POJO
+        - Java Object returned from Rest Controller converted to JSON
+
+
+== REST POJO overview ==
+    - Create new service to return list of students (firstName & lastName)
+    /api/students
+
+    REST client <-> REST Service
+    Client: Web / Postman
+    Service: REST Controller 
+
+    - Web Service (Controller) returns List<Student> (POJO)
+    - need to covnert to JSON
+    - Spring auto convert POJO to JSON (auto call setter / getter as required)
+        - setter for POJO -> JSON
+        - getter for JSON -> POJO
+
+    
+    - Development Process -
+        1) Create Java POJO class for Student
+            - create package "entity"
+            - create new class "Student"
+                - private String firstName
+                - private String lastName
+                - getter + setter
+                - constructor + arg constructor
+
+            
+        2) Create Spring REST service using @RestController
+            - create StudentRestController inside "rest" package
+
+
+                    @RestController
+                    @RequestMapping("/api")
+                    public class StudentRestController {
+                        @GetMapping
+                        public List<Student> getStudents() {
+                            List<Student> theStudents = new ArrayList<>();
+                            theStudents.add(new Student("John", "Doe"));
+                            theStudents.add(new Student("Bob", "Pattel"));
+                            theStudents.add(new Student("Simon", "Clarks"));
+                            
+                            return theStudents;
+                        }
+                    }
+
+
+== Spring REST Path Variables ==
+    - eg: retrieve student by id
