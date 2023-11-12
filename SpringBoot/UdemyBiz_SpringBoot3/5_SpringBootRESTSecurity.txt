@@ -1,0 +1,98 @@
+Keywords:
+    - Spring Security Model
+    - Enabling Spring Security 
+    - Adding Spring Security 
+    - Basic Security Config
+
+
+== Spring Security Model ==
+    - Spring Security : Framework for security
+        - implemented with servlet filters in background
+            Servlet: Java class extending capabilities of servers
+                - can respond to many types of requests
+                - most commonly implemented in web apps
+
+            Servlet filters:
+                - used to pre-process / post-process web requests
+                - route web request based on security logic
+                - Spring provide bunch of security functionality with servlet filters
+
+            Web Browser <-> Spring Security filters <-> Protected web resource
+                - look at app security config
+                - user / passwords / roles
+
+    - Spring Security in Action -
+        1) is web resource protected? no = show resource directly
+        2) Is user authenticated? -> no: send to logic form
+        3) Is authenticated user authorized? -> no: access denied
+            - yes = show resource
+
+    - Security Concepts (Web) -
+        1) Authentication
+            - user id & password checks
+        2) Authorization
+            - check if user have authorized role
+
+    - 2 Methods to secure app -
+        1) Declarative security 
+            - define app security constraints in config
+            - using @Configuration
+            - provides separation b/w app code & security code
+
+        2) Programmatic security
+            - Spring Security provides API for custom add coding
+            - greater customizability for specific app requirements
+            - own security implementation
+
+== Enabling Spring Security ==
+
+    1) go to pom.xml
+        <dependency>
+            <groupId> org.springframework.boot </groupId>
+            <artifactId> spring-boot-starter-security </artifactId>
+        </dependency>
+    2) automatically secure all endpoints for app, no additional coding required
+        - just need to customize config
+
+        - Spring Security will auto prompt for login
+
+        default user: user
+        default password: generated in console
+
+            - To override default user & pw, go to application.properties:
+            eg:
+                spring.security.user.name=scott
+                spring.security.user.password=tiger
+
+== Authentication ==
+    - in-memory authentication (taught in course)
+    - JDBC using ORM to DB (taught in course)
+    - LDAP
+    - Custom / Pluggable
+    - others...
+
+
+== Adding Spring Security ==
+
+    1) open pom.xml file
+            <dependency>
+                <groupId> org.springframework.boot </groupId>
+                <artifactId> spring-boot-starter-security </artifactId>
+            </dependency>
+
+            - load maven changes
+
+    2) Spring boot will automatically secure all endpoints
+
+    3) startup app to test (run cruddemoapp)
+
+    4) try running endpoint for testing
+        default user: user
+        password: generated in console
+        eg:
+            875a358a-8667-4921-b0ba-bc68243483bc
+
+        - springboot will prompt for user / pw
+
+
+== Basic Security Config ==

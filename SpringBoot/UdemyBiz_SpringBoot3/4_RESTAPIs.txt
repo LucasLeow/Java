@@ -1,15 +1,24 @@
-Keywords to search (code)
+Keywords to search (Spring code)
     - Spring Rest Controller
     - REST POJO
         - how java convert java objects to JSON automatically using Jackson module etc.
     - Spring REST Path Variables (eg: getting student by ID)
+    - Spring REST Exception Handling (for single controller) (small projects) (for special specific use case)
+    - Spring REST Global Exception Handling (for all controllers, global) (large projects) (Best practice for real-time projects)
+    - Spring REST API Design Best Practices
+    - Real Time Project Building (Employee project, REST + CRUD with MYSQL)
+    - Spring REST + DAO pattern (Get All)
+    - Service Layer (Between Controller & DAO/Repo)
+    - Implementing Find, Add, Update, Delete with REST
+    - Spring Data JPA
+    - Spring Data REST
 
-Learnings
-    - Create REST APIs / Web Services with Spring @RestController
-    - REST Concepts, JSON, HTTP
-    - CRUD Interface with Spring REST
 
-Business Problem used:
+
+
+== REST API Intro ==
+
+eg Business Problem:
     - client app providing weather report for a city
     - need weather data from external service
 
@@ -107,6 +116,7 @@ Application Architecture
             - Client Tool -
                 - Send HTTP requests to REST Web Service
                 - Postman
+
 
 
 == Spring Rest Controller ==
@@ -238,13 +248,18 @@ Application Architecture
                     @RestController
                     @RequestMapping("/api")
                     public class StudentRestController {
-                        @GetMapping
-                        public List<Student> getStudents() {
-                            List<Student> theStudents = new ArrayList<>();
+
+                        private List<Student> theStudents = new ArrayList<>();
+
+                        @PostConstruct // called only once to load data
+                        public void loadData() {
                             theStudents.add(new Student("John", "Doe"));
                             theStudents.add(new Student("Bob", "Pattel"));
                             theStudents.add(new Student("Simon", "Clarks"));
-                            
+                        }
+
+                        @GetMapping
+                        public List<Student> getStudents() {
                             return theStudents;
                         }
                     }
@@ -252,3 +267,638 @@ Application Architecture
 
 == Spring REST Path Variables ==
     - eg: retrieve student by id
+        - /api/students/{studentId}
+        - /api/students/0
+        - /api/students/1
+
+    - Development Process - 
+
+        1) Add request mapping to SPRING REST service
+            - bind path variable to method parameter using @PathVariable
+       
+        @RestController
+        @RequestMapping("/api")
+        public class StudentRestController {
+
+            @GetMapping("/students/{studentId}") // {studentId} must match @PathVariable studentId
+            public Student getStudent(@PathVariable int studentId) {
+                // theStudents created in previous example, refer above, is a ArrayList
+                return theStudents.get(studentId);
+            }
+        }
+
+
+== Spring REST Exception Handling ==
+    - want to handle exception and return error as JSON
+    - many different exceptions, need to consider edge cases
+        - include generic exception, a catch-all just in case
+
+    - Development Process
+        1) Create custom error response class
+            - will send message back to client as JSON
+            - define using POJO, converted to JSON by Jackson 
+                - with Jackson, can define any custom fields (avail from Java packages) to be tracked
+
+            - create new class in "rest" package
+
+                public class StudentErrorResponse {
+                    private int status;
+                    private String message;
+                    private long timeStamp;
+
+                    // constructors
+                    // getters | setters
+                }
+        2) create custom exception class
+
+            - custom Student exception will be used by REST service
+            - if cant find student, throw this exception
+
+            - create new class in "rest" package
+
+                public class StudentNotFoundException extends RuntimeException {
+                    public StudentNotFoundException(String msg) {
+                        super(msg);
+                    }
+                }
+        3) Update REST service to throw exception if Student (resource) not found
+
+            @RestController
+            @RequestMapping("/api")
+            public class StudentRestController {
+                @GetMapping("/students/{studentId}") 
+                public Student getStudent(@PathVariable int studentId) {
+                    if ( (studentId >= theStudents.size()) || (studentId < 0)) {
+                        throw new StudentNotFoundException("Student id not found - " + studentId);
+                        // could also check DB if return null, then throw exception
+                    }
+                }
+
+                @ExceptionHandler
+                public ResponseEntity<StudentErrorResponse> handleException(StudentNotFoundException exc) {
+                    // <StudentErrorResponse> - type of response (POJO) to return via HTTP in JSON
+                    // handleException - method name
+                    // (StudentNotFoundException exc) - type of Exception to handle
+
+                    StudentErrorResponse err = new StudentErrorResponse();
+
+                    // setter methods define in StudentErrorResponse class (POJO)
+                    err.setStatus(HttpStatus.NOT_FOUND.value());
+                    err.setMessage(exc.getMessage());
+                    err.setTimeStamp(System.currentTimeMillis());
+
+                    return new ResponseEntity<>(err, HttpStatus.NOT_FOUND); // (response_body, status_code)
+                }
+
+                @ExceptionHandler // general exception handling
+                public ResponseEntity<StudentErrorResponse> handleException(Exception exc) {
+                    StudentErrorResponse err = new StudentErrorResponse();
+
+                    err.setStatus(HttpStatus.BAD_REQUEST.value());
+                    err.setMessage(exc.getMessage());
+                    err.setTimeStamp(System.currentTimeMillis());
+
+                    return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST); 
+                }
+            }
+
+        4) Add exception handler method using @ExceptionHandler
+            - will return ResponseEntity, a wrapper for HTTP response object
+            - provides fine grain control for
+                - HTTP status code | HTTP headers & Response body
+
+
+== Spring REST Global Exception Handling == (Best practice for real-time projects)
+    - previous exception handling was for specific REST controller
+    - can't be reused by other controllers
+    - large projects have multiple controllers
+    - global exception handlers
+        - promote reuse
+        - centralized exception handling
+
+    - using @ControllerAdvice (Aspect Oriented Programming)
+        - can be used for:
+            - pre-processing requests to controllers
+            - post-processing to handle exceptions
+
+        REST Client <-> Controller Advice (Exception handlers here) <-> REST Service
+            - previously exception handler @ REST Service
+
+
+    - Development process
+        1) Create new @ControllerAdvice
+            - create new class StudentRestExceptionHandler in "rest" package
+
+                @ControllerAdvice
+                public class StudentRestExceptionHandler() {
+                    ...
+                }
+
+        2) Refactor REST service (transfer local Exception Handling code to @ControllerAdvice) (if any)
+            - Go to StudentRestController, for all @ExceptionHandler 
+            - Transfer to @ControllerAdvice class in step 1
+
+
+== Spring REST API Design Best Practices ==
+
+    - Considerations:
+        - Users of API (Who?)
+        - How will they use API
+        - Design API based on requirements
+
+    - API Design Process
+        1) Review API requirements
+
+            eg: Create REST API for Employee Directory
+                - REST Client should be able to:
+                    - Get list of employees
+                    - Get single employee by id
+                    - add new employee
+                    - update employee
+                    - delete employee
+
+        2) Identify main resource / entity
+
+            eg: employee in given example
+            - convention: use plural form : i.e employees
+            - just guideline for RESTful APIs
+        
+            /api/employees
+
+        3) Use HTTP methods to assign action on resource
+
+            - GET : single / all
+            - PUT : Update existing
+            - POST : Create new
+            - DELETE : Delete existing
+
+        eg Endpoints:
+            POST : /api/employees
+            GET :
+                - /api/employees (all)
+                - /api/employees/{employeeId} (single)
+            PUT : /api/employees/{employeeId}
+            DELETE : /api/employees/{employeeId}
+
+        - Paypal eg (invoices): 
+            /v1/invoicing/invoices (POST create draft invoice)
+            /v1/invoicing/invoices (GET list of invoices)
+            /v1/invoicing/invoices/{invoice_id} (GET, Update, delete specific invoice)
+        
+        - Github eg (repositories):
+            /user/repos (POST repo)
+            /user/repos (GET list of repos)
+            /repos/:owner/:repo (GET, DELETE specific repo)
+
+    - REST Anti Patterns (Bad practices) -
+        ! Do not include actions in endpoints
+            eg: 
+                /api/employeesList
+                /api/deleteEmployee
+                /api/addEmployee
+
+    
+== Real Time Project Building ==
+    - REST API + CRUD on DB 
+    - employee project with API requirements:
+
+            POST : /api/employees
+            GET :
+                - /api/employees (all)
+                - /api/employees/{employeeId} (single)
+            PUT : /api/employees/{employeeId}
+            DELETE : /api/employees/{employeeId}
+
+    - Development Process -
+        1) Set up dev db   
+            - using SQL to create necessary tables + columns + insert initial data as required
+
+        2) Create springboot proj (spring intializr)
+            - spring web
+            - spring data JPA
+            - spring devtools
+            - mySQL driver
+
+        3) get list of employees
+        4) get single employee
+        5) add new employee
+        6) update existing employee
+        7) delete existing employee
+
+    - App Architecture -
+
+        Employee REST Controller <-> Employee Service <-> Employee DAO <-> Backend DB
+
+
+
+== Spring REST + DAO pattern ==
+    - build DAO layer
+
+    Development Process
+        1) Update db configs in application.properties
+
+        spring.datasource.url=jdbc:mysql://localhost:3306/employee_directory
+        spring.datasource.username=springstudent
+        spring.datasource.password=springstudent
+
+        2) Create Employee Entity (ORM)
+            - create "entity" package
+            - create Employee class in entity package
+
+                    import jakarta.persistence.*;
+                    import lombok.*;
+
+                    @Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString
+                    @Entity
+                    @Table(name="employee")
+                    public class Employee {
+                        @Id
+                        @GeneratedValue(strategy = GenerationType.IDENTITY)
+                        @Column(name="id")
+                        private int id;
+
+                        @Column(name="first_name")
+                        private String firstName;
+
+                        @Column(name="last_name")
+                        private String lastName;
+
+                        @Column(name="email")
+                        private String email;
+                    }
+
+        3) Create DAO Interface & DAOImplementation
+            - create new "dao" package
+            - create new interface EmployeeDAO
+
+                        public interface EmployeeDAO {
+                            List<Employee> findAll();
+                        }
+
+            - create new class EmployeeDAOImpl
+
+                        @Repository
+                        public class EmployeeDAOImpl implements EmployeeDAO{
+                            private EntityManager entityManager;
+
+                            @Autowired
+                            public EmployeeDAOImpl (EntityManager theEntityManager) {
+                                this.entityManager = theEntityManager;
+                            }
+                            @Override
+                            public List<Employee> findAll() {
+                                TypedQuery<Employee> theQuery = entityManager.createQuery("from Employee", Employee.class);
+                                List<Employee> employees = theQuery.getResultList();
+                                return employees;
+                            }
+                        }
+
+        4) Create REST controller to use DAO
+            - create new package "rest"
+            - create EmployeeRestController class inside package
+
+            @RestController
+            @RequestMapping("/api")
+            public class EmployeeRestController {
+                private EmployeeDAO employeeDAO;
+                public EmployeeRestController(EmployeeDAO theEmployeeDAO) {
+                    employeeDAO = theEmployeeDAO;
+                }
+
+                @GetMapping("/employees")
+                public List<Employee> findAll() {
+                    return employeeDAO.findAll();
+                }
+            }
+
+== Service Layer ==
+    - Service Facade design pattern
+    - intermediate layer for business logic
+    - integrate data from multiple sources (dao / repo)
+    - best practice to apply transactional boundaries @ service layers
+        - i.e apply @Transactional on service methods
+        - remove @Transactional on DAO methods if they exists
+    - Service layer (best practice for large-scale enterprise)
+        - acts as intermediary between DAOs
+        - able to implement business logic
+
+        -EmployeeService
+            - EmployeeDAO - EmployeeDB
+            - SkillsDAO - SkillDB
+            - PayrollDAO - PayrollDB
+
+    - using @Service
+
+    Development Process
+        1) Define Service Interface
+            - create new "service" package
+            - create new EmployeeService Interface
+
+            public interface EmployeeService {
+                List<Employee> findAll();
+            }
+
+        2) Define Service implementation
+            - create new class EmployeeServiceImpl
+
+
+            @Service
+            public class EmployeeServiceImpl implements EmployeeService {
+                private EmployeeDAO employeeDAO;
+                @Autowired
+                public EmployeeServiceImpl(EmployeeDAO theEmployeeDAO) {
+                    this.employeeDAO = theEmployeeDAO;
+                }
+
+                @Override
+                public List<Employee> findAll() {
+                return employeeDAO.findAll();
+                }
+            }
+
+
+            - Go to controller, remove DAO injection
+            - inject Service
+
+            @RestController
+            @RequestMapping("/api")
+            public class EmployeeRestController {
+                
+                private EmployeeService employeeService;
+
+                @Autowired
+                public EmployeeRestController(EmployeeService theEmployeeService) {
+                    employeeService = theEmployeeService;
+                }
+
+                @GetMapping("/employees")
+                public List<Employee> findAll() {
+                    return employeeService.findAll();
+                }
+            }
+
+== Implementing Find, Add, Update, Delete with REST ==
+
+ ** @Transactional not in DAO layer, applied in Service layer
+
+    - get single employee by id
+    - add new employee
+    - update existing employee
+    - delete existing employee
+
+    - Development Process -
+        1) open DAO package
+            - go to EmployeeDAO Interface to add all necessary methods
+
+                Employee findById(int id);
+                Employee create(Employee theEmployee);
+                void deleteEmployee(int id);
+
+        2) Implement methods in EmployeeDAOImpl layer
+
+                @Override
+                public Employee findById(int id) {
+                    Employee theEmployee = entityManager.find(Employee.class, id);
+                    return theEmployee;
+                }
+
+                @Override
+                public Employee create(Employee theEmployee) {
+                    Employee newEmployee = entityManager.merge(theEmployee);
+                    return newEmployee;
+                }
+
+                @Override
+                public void deleteEmployee(int id) {
+                    Employee theEmployee = entityManager.find(Employee.class, id);
+                    entityManager.remove(theEmployee);
+                }
+
+        3) Implement methods in EmployeeService layer
+            - copy methods from EmployeeDAO Interface to EmployeeService Interface
+            - Implement methods in ServiceImpl (include @Transactional in this layer)
+
+                    @Override
+                    public Employee findById(int id) {
+                        return employeeDAO.findById(id);
+                    }
+
+                    @Transactional
+                    @Override
+                    public Employee create(Employee theEmployee) {
+                        return employeeDAO.create(theEmployee);
+                    }
+
+                    @Transactional
+                    @Override
+                    public void deleteEmployee(int id) {
+                        employeeDAO.deleteEmployee(id);
+                    }
+
+        4) Implement methods in REST Controller layer
+
+        REST client Req <-> Res REST Controller
+
+            - open EmployeeRestController
+
+                private EmployeeService employeeService;
+
+                @Autowired
+                public EmployeeRestController(EmployeeService theEmployeeService) {
+                    employeeService = theEmployeeService;
+                }
+
+                @GetMapping("/employees")
+                public List<Employee> findAll() {
+                    return employeeService.findAll();
+                }
+
+                @GetMapping("/employees/{employeeId}")
+                public Employee getEmployee(@PathVariable int employeeId) {
+                    Employee theEmployee = employeeService.findById(employeeId);
+                    if (theEmployee == null) {
+                        throw new RuntimeException("Employee id not found " + employeeId );
+                    }
+                    return theEmployee;
+                }
+
+                @PostMapping("/employees")
+                public Employee addEmployee(@RequestBody Employee theEmployee) { //@RequestBody to handle JSOM data
+                    theEmployee.setId(0); // in case id was provided, set to 0 to force a POST
+                    return employeeService.save(theEmployee);
+                }
+
+                @PutMapping("/employees/{employeeId}")
+                public Employee updateEmployee(@RequestBody Employee theEmployee) {
+                    return employeeService.save(theEmployee);
+                }
+
+                @DeleteMapping("/employees/{employeeId}")
+                public String deleteEmployee(@PathVariable int employeeId) {
+                    Employee theEmployee = employeeService.findById(employeeId);
+
+                    if (theEmployee == null) {
+                        throw new RuntimeException("Employee id not found " + employeeId);
+                    }
+                    employeeService.deleteEmployee(employeeId);
+                    return "Sucessfully deleted Employee: " + employeeId ;
+                }
+
+
+
+== Spring Data JPA ==
+    - tedious to use DAO pattern
+        - DAO interface + DAO impl
+    - most code is the same, just different name (Student | Employee | Book etc.)
+        - GET PUT POST DELETE
+
+    Solution:
+        Spring Data JPA
+        - Provide Entity type (ORM) & Primary key
+        - Spring Data JPA provide all basic CRUD features for free
+
+
+        - JpaRepository Interface
+            - common methods provided:
+                - findAll()
+                - findById()
+                - save()
+                - deleteById()
+
+    - Development Process -
+        - remove DAO package
+        - create "repo" package
+        - create EmployeeRepository interface
+        1) Extend JpaRepository interface
+
+            public interface EmployeeRepository extends JpaRepository<Entity_type, Primary_key_type> {
+                // no need for impl class
+            }
+
+                    public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
+                    }
+
+        2) use Repository in app, instead of DAO
+            - no need for impl classes
+            - Inside Service class
+
+            - Go to EmployeeService
+
+            private EmployeeRepository employeeRepository;
+
+            @Autowired
+            public EmployeeServiceImpl (EmployeeRepository theEmployeeRepository ) {
+                employeeRepository = theEmployeeRepository;
+            }
+
+            @Override
+            public List<Employee> findAll() {
+                return employeeRepository.findAll();
+            }
+
+            - go to EmployeeServiceImpl:
+
+            @Service
+            public class EmployeeServiceImpl implements EmployeeService {
+                private EmployeeRepository employeeRepository;
+                @Autowired
+                public EmployeeServiceImpl(EmployeeRepository theEmployeeRepository) {
+                    this.employeeRepository = theEmployeeRepository;
+                }
+
+                @Override
+                public List<Employee> findAll() {
+                return employeeRepository.findAll();
+                }
+
+                @Override
+                public Employee findById(int id) {
+                    Optional<Employee> result = employeeRepository.findById(id);
+
+                    Employee theEmployee = null;
+                    if (result.isPresent()) {
+                        theEmployee = result.get();
+                    } else {
+                        throw new RuntimeException("Can't find employee: " + id);
+                    }
+                    return theEmployee;
+                }
+
+                @Transactional
+                @Override
+                public Employee save(Employee theEmployee) {
+                    return employeeRepository.save(theEmployee);
+                }
+
+                @Transactional
+                @Override
+                public void deleteById(int id) {
+                    employeeRepository.deleteById(id);
+                }
+            }
+
+
+== Spring Data REST ==
+    - Spring Data replaced DAO pattern
+    - possible for Spring Data to apply to Spring REST APIs?
+
+    - similar repetitive pattern for REST APIs
+        - GET | PUT | POST | DELETE
+        - only entities change, methods stays largely similar
+
+    - Solution : Spring Data REST
+        - Leverage existing JpaRepository (with provided Entity & primary key dtype already)
+        - provides common REST CRUD for free
+
+            POST : /employees
+            GET : /employees
+            GET : /employees/{employeeId}
+            PUT : /employees/{employeeId}
+            DELETE : /employees/{employeeId}
+
+        - How it works? -
+            - Spring Data REST scan project for JpaRepository extension
+            - expose REST API for each entity type extending JpaRepository
+            - creates REST endpoints based on entity type
+            - first character of entity is lowercase + in pluralized form
+
+            Entity: Employee
+            Spring Data REST endpoint: employees
+
+    - Development Process -
+        1) Add Spring Data REST to Maven POM file
+            - thats it, no coding required
+
+            Require:
+                - Entity 
+                - JpaRepository (EmployeeRepository extends JpaRepository)
+                - Maven POM dependency
+
+            <dependency>
+                <groupId> org.springframework.boot </groupId>
+                <artifactId> spring-boot-starter-data-rest </artifactId>
+            </dependency>
+
+        2) delete service & controller packages
+
+
+        - Modify REST endpoint path -
+            1) go to application.properties (to modify base path)
+                spring.data.rest.base-path=/magic-api
+
+            endpoint: localhost:8080/magic-api/employees
+
+            
+            2) To customize Entity Endpoint:
+            - Go to Repository Interface file to add annotation
+
+            @RepositoryRestResource(path="members") //note, Integer below is the datatype for primary key
+            public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
+
+            }
+            http://localhost:8080/magic-api/members
+
+            3) to sort:
+            http://localhost:8080/magic-api/employees?sort=lastName
+            http://localhost:8080/magic-api/employees?sort=firstName,desc
+            
